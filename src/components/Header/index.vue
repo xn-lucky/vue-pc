@@ -32,7 +32,11 @@
 
       <div class="header-bottom-right">
         <form action="##">
-          <input type="text" /><button @click.prevent="search">搜索</button>
+          <input type="text" v-model="searchText" /><button
+            @click.prevent="search"
+          >
+            搜索
+          </button>
         </form>
       </div>
     </div>
@@ -42,10 +46,36 @@
 <script>
 export default {
   name: "Header",
+  data() {
+    return {
+      searchText: "", // 搜索框内容
+    };
+  },
   methods: {
+    /**
+      搜索功能
+     */
     search() {
-      // 点击搜索
-      this.$router.push("/search");
+      // 传参方式1
+      const { searchText } = this;
+      /*
+      const params = searchText ? `/${searchText}` : "";
+      const localtion = `/search${params}`;
+      this.$router.push(localtion); */
+
+      // 传参方式2 this.$router.push({})push中也可以是一个对象
+      const localtion = {
+        name: "search",
+      };
+
+      // 这时候要判断params是否有值，有的话才要添加上，没有就不需要
+      if (searchText) {
+        localtion.params = {
+          searchText,
+        };
+      }
+
+      this.$router.push(localtion);
     },
   },
 };
