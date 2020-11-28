@@ -46,3 +46,13 @@
 )
 
 解决方式: 我们可以重写$router.push方法,$router是使用了路由后，将VueRouter的实例router代理到了组件实例上this为$router，所以重写若在组件实例上改的话需要每个用到的组件实例都需要修改，所以考虑到复用我们在VueRouter的原型上进行重写
+
+4: 目录设计
+  src
+    - api ajax请求
+    - components 
+    - mock
+    - views
+    - router
+    - store
+    - utils 工具函数模块
