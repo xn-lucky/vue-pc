@@ -1,7 +1,7 @@
 /*
   实现请求
 */
-import instance from '../utils/request';
+import instance from '@utils/request';
 
 // 登录请求功能
 

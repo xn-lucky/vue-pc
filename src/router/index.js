@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Home from '../views/Home';
-import Login from '../views/Login';
-import Register from '../views/Register';
-import Search from '../views/Search';
+import Home from '@views/Home';
+import Login from '@views/Login';
+import Register from '@views/Register';
+import Search from '@views/Search';
 
 // 重写VueRouter原型上的push/replace方法
 const { push, replace } = VueRouter.prototype;// 将push赋予另外值,为以后调用
