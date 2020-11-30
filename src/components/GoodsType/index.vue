@@ -1,7 +1,11 @@
 <template>
   <div class="goodstype">
     <div class="goodstype-container">
-      <div class="goodstype-type">
+      <div
+        class="goodstype-type"
+        @mouseenter="isSearchShow = true"
+        @mouseleave="isSearchShow = false"
+      >
         <h2>全部商品分类</h2>
         <nav class="goodstype-nav">
           <a href="##">服装城</a>
@@ -18,53 +22,59 @@
             方式二: 给每一级分类绑定点击事件进行编程式导航,(绑定的事件太多)
             方式三(最优解): 通过事件委托给需要绑定事件的公共的父级，利用冒泡原理
          -->
-        <div class="goodstype-list" @click="toSearch">
+        <transition name="search">
           <div
-            class="goodstype-list-detail"
-            v-for="categoryList in categoryLists"
-            :key="categoryList.id"
+            class="goodstype-list"
+            @click="toSearch"
+            v-show="isHomeShow || isSearchShow"
           >
-            <h3>
-              <!-- 一级分类 -->
-              <a
-                :data-categoryName="categoryList.categoryName"
-                :data-categoryId="categoryList.categoryId"
-                :data-categorytype="1"
-                >{{ categoryList.categoryName }}</a
-              >
-            </h3>
-            <div class="goodstype-specific">
-              <div class="goodstype-specific-list">
-                <dl
-                  v-for="twoCategory in categoryList.categoryChild"
-                  :key="twoCategory.id"
+            <div
+              class="goodstype-list-detail"
+              v-for="categoryList in categoryLists"
+              :key="categoryList.id"
+            >
+              <h3>
+                <!-- 一级分类 -->
+                <a
+                  :data-categoryName="categoryList.categoryName"
+                  :data-categoryId="categoryList.categoryId"
+                  :data-categorytype="1"
+                  >{{ categoryList.categoryName }}</a
                 >
-                  <dt>
-                    <!-- 二级分类 -->
-                    <a
-                      :data-categoryName="twoCategory.categoryName"
-                      :data-categoryId="twoCategory.categoryId"
-                      :data-categorytype="2"
-                      >{{ twoCategory.categoryName }}</a
-                    >
-                  </dt>
-                  <dd
-                    v-for="threeCategory in twoCategory.categoryChild"
-                    :key="threeCategory.id"
+              </h3>
+              <div class="goodstype-specific">
+                <div class="goodstype-specific-list">
+                  <dl
+                    v-for="twoCategory in categoryList.categoryChild"
+                    :key="twoCategory.id"
                   >
-                    <!-- 三级分类 -->
-                    <a
-                      :data-categoryName="threeCategory.categoryName"
-                      :data-categoryId="threeCategory.categoryId"
-                      :data-categorytype="3"
-                      >{{ threeCategory.categoryName }}</a
+                    <dt>
+                      <!-- 二级分类 -->
+                      <a
+                        :data-categoryName="twoCategory.categoryName"
+                        :data-categoryId="twoCategory.categoryId"
+                        :data-categorytype="2"
+                        >{{ twoCategory.categoryName }}</a
+                      >
+                    </dt>
+                    <dd
+                      v-for="threeCategory in twoCategory.categoryChild"
+                      :key="threeCategory.id"
                     >
-                  </dd>
-                </dl>
+                      <!-- 三级分类 -->
+                      <a
+                        :data-categoryName="threeCategory.categoryName"
+                        :data-categoryId="threeCategory.categoryId"
+                        :data-categorytype="3"
+                        >{{ threeCategory.categoryName }}</a
+                      >
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -75,11 +85,12 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "GoodsType",
-  // data() {
-  //   return {
-  //     categoryLists: [],
-  //   };
-  // },
+  data() {
+    return {
+      isHomeShow: this.$route.path === "/",
+      isSearchShow: false,
+    };
+  },
   computed: {
     // 因为数据在home中，所以获取数据的时候不能像之前那样获取了
     // ...mapState(["categoryLists"])
@@ -99,14 +110,24 @@ export default {
       // console.log(e.target.dataset);
       const { categoryname, categoryid, categorytype } = e.target.dataset;
 
-      // 进行编程式导航,需要传递两个query参数
-      this.$router.push({
+      const localtion = {
         name: "search",
         query: {
           categoryName: categoryname,
           [`category${categorytype}id`]: categoryid,
         },
-      });
+      };
+
+      // 判断是否有params参数，有就添加,因为在路由配置那边定义的路由参数(params)为searchText，所以在这边解构出来
+      const { searchText } = this.$route.params;
+      if (searchText) {
+        localtion.params = {
+          searchText,
+        };
+      }
+
+      // 进行编程式导航,需要传递两个query参数
+      this.$router.push(localtion);
     },
   },
   mounted() {
@@ -198,7 +219,7 @@ export default {
   padding-right: 4px;
 }
 .goodstype-specific-list dl {
-  height: 24px;
+  // height: 24px;
   padding: 6px 0;
   display: flex;
   font-size: 12px;
@@ -211,11 +232,20 @@ export default {
   text-align: right;
   padding-top: 3px;
   padding-right: 6px;
+  float: left;
 }
 .goodstype-specific-list dd {
   height: 14px;
   padding: 0 8px;
   margin-top: 5px;
   border-left: 1px solid #ddd;
+  float: left;
+}
+.search-enter {
+  height: 0;
+}
+.search-enter-active {
+  transition: height 0.5s;
+  overflow: hidden;
 }
 </style>

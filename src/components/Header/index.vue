@@ -66,6 +66,10 @@ export default {
       // 传参方式2 this.$router.push({})push中也可以是一个对象
       const localtion = {
         name: "search",
+        // 第一种写法，如果有值就解构没值就为空
+        query: {
+          ...this.$route.query,
+        },
       };
 
       // 这时候要判断params是否有值，有的话才要添加上，没有就不需要
@@ -74,6 +78,11 @@ export default {
           searchText,
         };
       }
+      // 第二种写法，进行判断query是否有值
+      // const { categoryName } = this.$route.query;
+      // if (categoryName) {
+      //   localtion.query = this.$route.query;
+      // }
 
       this.$router.push(localtion);
     },
