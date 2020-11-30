@@ -14,7 +14,8 @@
     "nprogress": "^0.2.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "mockjs": "^1.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -56,7 +57,9 @@
       "function-paren-newline": 0,
       "consistent-return": 0,
       "import/prefer-default-export": 0,
-      "no-console": 0
+      "no-console": 0,
+      "no-shadow": 0,
+      "semi": 0
     }
   },
   "browserslist": [

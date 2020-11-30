@@ -61,13 +61,15 @@
                       v-for="threeCategory in twoCategory.categoryChild"
                       :key="threeCategory.id"
                     >
-                      <!-- 三级分类 -->
-                      <a
-                        :data-categoryName="threeCategory.categoryName"
-                        :data-categoryId="threeCategory.categoryId"
-                        :data-categorytype="3"
-                        >{{ threeCategory.categoryName }}</a
-                      >
+                      <em>
+                        <!-- 三级分类 -->
+                        <a
+                          :data-categoryName="threeCategory.categoryName"
+                          :data-categoryId="threeCategory.categoryId"
+                          :data-categorytype="3"
+                          >{{ threeCategory.categoryName }}</a
+                        >
+                      </em>
                     </dd>
                   </dl>
                 </div>
@@ -132,6 +134,9 @@ export default {
   },
   mounted() {
     // console.log(this);
+
+    // 为了减少请求次数，请求之前判断是否有数据，没有数据在请求，有数据就不请求了
+    if (this.categoryLists.length) return;
     // 发送数据请求
     this.getCategoryList();
     //   reqGetCategoryList()
@@ -233,9 +238,17 @@ export default {
   padding-top: 3px;
   padding-right: 6px;
   float: left;
+  overflow: hidden;
 }
 .goodstype-specific-list dd {
+  // width: 415px;
+  // height: 14px;
+
+  overflow: hidden;
+}
+.goodstype-specific-list dd em {
   height: 14px;
+  line-height: 14px;
   padding: 0 8px;
   margin-top: 5px;
   border-left: 1px solid #ddd;
