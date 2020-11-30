@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <!-- 商品列表公公有的搜索时也要现实 -->
+    <!-- 商品列表公有的,搜索时也要实现 -->
     <GoodsType />
     <ListContainer />
   </div>

@@ -8,7 +8,9 @@ import 'nprogress/nprogress.css';
 
 // 创建一个axios为instance,功能与axios类似，但是没有axios本身的静态方法
 const instance = axios.create({
-  baseURL: 'http://182.92.128.115/api',
+  // baseURL: 'http://182.92.128.115/api',
+  // 公共的路径,因为运用了代理解决跨域,所以客户端发送请求到代理服务器,代理服务器的地址是与客户端的一致,所以可以省略，
+  baseURL: '/api',
   headers: {
     // 这边是配置公共的请求头，但是因为登录没有传token参数，所以这边不会设置
   }
@@ -31,7 +33,6 @@ instance.interceptors.response.use((res) => {
         响应成功: 是响应状态码为2XX
         功能成功: 是返回的数据res.data.code为200
   */
-  // debugger;
   // 不管是不是成功还是失败，都结束进度条
   NProgress.done();
   if (res.data.code === 200) {

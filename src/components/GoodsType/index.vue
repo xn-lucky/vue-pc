@@ -49,25 +49,41 @@
 </template>
 
 <script>
-import { reqGetCategoryList } from "@api/getCategoryList";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "GoodsType",
-  data() {
-    return {
-      categoryLists: [],
-    };
+  // data() {
+  //   return {
+  //     categoryLists: [],
+  //   };
+  // },
+  computed: {
+    // 因为数据在home中，所以获取数据的时候不能像之前那样获取了
+    // ...mapState(["categoryLists"])
+    ...mapState({
+      categoryLists: (state) => {
+        return state.home.categoryLists;
+      },
+    }),
+  },
+  methods: {
+    // 函数不需要
+    ...mapActions(["getCategoryList"]),
   },
   mounted() {
+    // console.log(this);
     // 发送数据请求
-    reqGetCategoryList()
-      .then((res) => {
-        // 返回数据成功,使数据变成响应式
-        this.categoryLists = res.slice(0, 15);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.getCategoryList();
+    //   reqGetCategoryList()
+    //     .then((res) => {
+    //       // 返回数据成功,使数据变成响应式
+    //       this.categoryLists = res.slice(0, 15);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
   },
 };
 </script>
