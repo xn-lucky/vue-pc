@@ -36,7 +36,7 @@ export default {
   },
   mutations: {
     GET_CATEGORY_LIST(state, categoryLists) {
-      state.categoryLists = categoryLists;
+      state.categoryLists = categoryLists.slice(0, 15);
     },
     GET_BANNERS(state, banners) {
       state.banners = banners;
