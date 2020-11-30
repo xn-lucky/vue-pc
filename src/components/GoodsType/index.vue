@@ -13,7 +13,12 @@
           <a href="##">有趣</a>
           <a href="##">秒杀</a>
         </nav>
-        <div class="goodstype-list">
+        <!-- 最优解: 通过事件委托的方式给每一级分类绑定事件
+            方式一: 利用router-link 给每一级分类进行链接导航(会出现有多少个数据就有多少个router-link组件,性能不好)
+            方式二: 给每一级分类绑定点击事件进行编程式导航,(绑定的事件太多)
+            方式三(最优解): 通过事件委托给需要绑定事件的公共的父级，利用冒泡原理
+         -->
+        <div class="goodstype-list" @click="toSearch">
           <div
             class="goodstype-list-detail"
             v-for="categoryList in categoryLists"
@@ -21,7 +26,12 @@
           >
             <h3>
               <!-- 一级分类 -->
-              <a href="####">{{ categoryList.categoryName }}</a>
+              <a
+                :data-categoryName="categoryList.categoryName"
+                :data-categoryId="categoryList.categoryId"
+                :data-categorytype="1"
+                >{{ categoryList.categoryName }}</a
+              >
             </h3>
             <div class="goodstype-specific">
               <div class="goodstype-specific-list">
@@ -30,13 +40,25 @@
                   :key="twoCategory.id"
                 >
                   <dt>
-                    <a>{{ twoCategory.categoryName }}</a>
+                    <!-- 二级分类 -->
+                    <a
+                      :data-categoryName="twoCategory.categoryName"
+                      :data-categoryId="twoCategory.categoryId"
+                      :data-categorytype="2"
+                      >{{ twoCategory.categoryName }}</a
+                    >
                   </dt>
                   <dd
                     v-for="threeCategory in twoCategory.categoryChild"
                     :key="threeCategory.id"
                   >
-                    <a>{{ threeCategory.categoryName }}</a>
+                    <!-- 三级分类 -->
+                    <a
+                      :data-categoryName="threeCategory.categoryName"
+                      :data-categoryId="threeCategory.categoryId"
+                      :data-categorytype="3"
+                      >{{ threeCategory.categoryName }}</a
+                    >
                   </dd>
                 </dl>
               </div>
@@ -70,6 +92,22 @@ export default {
   methods: {
     // 函数不需要
     ...mapActions(["getCategoryList"]),
+    toSearch(e) {
+      // 可以获取到目标元素,给目标元素绑定自定义属性，获取属性
+      // data-属性名 = 属性值  设置自定义属性
+      // e.target.dataset可以获取目标元素中自定义属性
+      // console.log(e.target.dataset);
+      const { categoryname, categoryid, categorytype } = e.target.dataset;
+
+      // 进行编程式导航,需要传递两个query参数
+      this.$router.push({
+        name: "search",
+        query: {
+          categoryName: categoryname,
+          [`category${categorytype}id`]: categoryid,
+        },
+      });
+    },
   },
   mounted() {
     // console.log(this);
