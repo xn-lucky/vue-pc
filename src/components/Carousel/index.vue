@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="swiper">
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
       <!-- 图片 -->
@@ -44,30 +44,39 @@ export default {
       // 此时初始化的时候不会触发,当carouselList改变触发，并且this.$nextTick是只触发一次的
       // this.$nextTick是在元素DOM更新后调用其回调函数
       this.$nextTick(() => {
-        new Swiper(".swiper-container", {
-          loop: true,
-          // If we need pagination
-          pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-          },
-          // Navigation arrows
-          navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          },
-          // 自动轮播
-          autoplay: {
-            delay: 2000, // 间隔时间
-            disableOnInteraction: false, // 当用户点击下一页之后，轮播继续
-          },
-        });
+        this.newSwiper();
+      });
+    },
+  },
+  methods: {
+    newSwiper() {
+      // new Swiper(".swiper-container", {
+      new Swiper(this.$refs.swiper, {
+        loop: true,
+        // If we need pagination
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        // Navigation arrows
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        // 自动轮播
+        autoplay: {
+          delay: 2000, // 间隔时间
+          disableOnInteraction: false, // 当用户点击下一页之后，轮播继续
+        },
       });
     },
   },
   mounted() {
     // new swiper的代码不能写在mounted中,因为Carousel组件是嵌入到其他组件的内部的,并且轮播图是要有数据才可以。
     // Carousel中 的mounted执行完只是确定了DOM元素渲染完成，并不代表有数据，所以要监听遍历轮播数据的字段是否有值,所以在watch中完成
+    // 有多个地方使用轮播图，有些是一上来就有数据的，所以在mounted中就创建swiper
+    if (!this.carouselList.length) return;
+    this.newSwiper();
   },
 };
 </script>

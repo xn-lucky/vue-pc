@@ -2,12 +2,13 @@
    home页面的state...
 */
 import { reqGetCategoryList } from "@api/getCategoryList";
-import { mockGetBanners } from "@api/getMockData";
+import { mockGetBanners, mockGetFloors } from "@api/getMockData";
 
 export default {
   state: {
     categoryLists: [],
-    banners: []
+    banners: [],
+    floors: []
   },
   getters: {
 
@@ -23,6 +24,10 @@ export default {
     async getBanners({ commit }) {
       const banners = await mockGetBanners();
       commit('GET_BANNERS', banners);
+    },
+    async getFloors({ commit }) {
+      const floors = await mockGetFloors();
+      commit('GET_FLOORS', floors);
     }
 
     // .then((res) => {
@@ -39,7 +44,9 @@ export default {
     },
     GET_BANNERS(state, banners) {
       state.banners = banners;
+    },
+    GET_FLOORS(state, floors) {
+      state.floors = floors;
     }
-
   }
 };
