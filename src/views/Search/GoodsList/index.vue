@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'GoodList'
+  name: 'GoodsList'
 }
 </script>
 

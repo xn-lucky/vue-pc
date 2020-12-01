@@ -61,7 +61,8 @@
       "no-console": 0,
       "no-shadow": 0,
       "semi": 0,
-      "no-new": 0
+      "no-new": 0,
+      "indent": 0
     }
   },
   "browserslist": [

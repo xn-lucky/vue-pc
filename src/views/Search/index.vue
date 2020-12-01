@@ -6,6 +6,7 @@
         <div class="bread-show">全部结果</div>
         <ul class="bread-list"></ul>
       </div>
+      <!-- 有品牌数据 -->
       <SelectType />
       <div class="search-navbar">
         <ul class="navbar-list">
@@ -16,22 +17,36 @@
           <li><a href="###">价格⬇</a></li>
         </ul>
       </div>
-      <GoodList />
+      <GoodsList />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import GoodsType from "@comps/GoodsType";
-import SelectType from './SelectType'
-import GoodList from './GoodList'
+import SelectType from "./SelectType";
+import GoodsList from "./GoodsList";
 
 export default {
   name: "Search",
   components: {
     GoodsType,
     SelectType,
-    GoodList,
+    GoodsList,
+  },
+  computed: {
+    // 这种获取数据太麻烦了,如果想要获取到productList下的数据，很麻烦，想要将productList下的数据也可以通过this获取,利用getters获取
+    ...mapState({
+      productList: (state) => state.search.productList,
+    }),
+  },
+  methods: {
+    ...mapActions(["getProductList"]),
+  },
+  mounted() {
+    // 发送请求
+    this.getProductList();
   },
 };
 </script>
@@ -56,7 +71,8 @@ export default {
 }
 
 .search-navbar {
-  height: 42px;
+  // height: 42px;
+  border: 1px solid #e4e4e4;
 }
 .navbar-list {
   display: flex;

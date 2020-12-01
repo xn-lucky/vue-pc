@@ -3,39 +3,31 @@
     <div class="selecttype-content">
       <div class="selecttype-logo">品牌</div>
       <ul class="logo-list">
-        <li>123</li>
-        <li>345</li>
-        <li>567</li>
+        <li v-for="trademark in trademarkList" :key="trademark.tmId">
+          {{ trademark.tmName }}
+        </li>
       </ul>
     </div>
-    <div class="type-wrap">
-      <div class="type-value">类型1</div>
+    <div class="type-wrap" v-for="attrs in attrsList" :key="attrs.attrId">
+      <div class="type-value">{{ attrs.attrName }}</div>
       <ul class="type-list">
-        <li>尘土1</li>
-        <li>尘土2</li>
-      </ul>
-    </div>
-    <div class="type-wrap">
-      <div class="type-value">类型2</div>
-      <ul class="type-list">
-        <li>尘土1</li>
-        <li>尘土2</li>
-      </ul>
-    </div>
-    <div class="type-wrap">
-      <div class="type-value">类型3</div>
-      <ul class="type-list">
-        <li>尘土1</li>
-        <li>尘土2</li>
+        <li v-for="(attrValue, index) in attrs.attrValueList" :key="index">
+          {{ attrValue }}
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  name: 'SelectTypes'
-}
+  name: "SelectTypes",
+  computed: {
+    ...mapGetters(["trademarkList", "attrsList"]),
+  },
+};
 </script>
 
 <style lang='less' scoped>
@@ -75,8 +67,8 @@ export default {
 }
 .logo-list li {
   width: 105px;
-  height: 25px;
-  line-height: 25px;
+  height: 52px;
+  line-height: 52px;
   border: 1px solid #e4e4e4;
   margin: -1px -1px 0 0;
   text-align: center;
@@ -85,5 +77,8 @@ export default {
 }
 .type-value {
   padding: 10px 10px 0 15px;
+}
+.type-list li {
+  margin-right: 30px;
 }
 </style>
