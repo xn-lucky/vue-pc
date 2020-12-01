@@ -1,10 +1,13 @@
 <template>
   <div class="listcontainer">
-    <div class="listcontainer-middle">
+    <!-- <div class="listcontainer-middle">
       <img src="../images/home/banner2.jpg" alt="" />
-      <!-- <img src="./images/home/banner1.jpg" alt="" />
+      <img src="./images/home/banner1.jpg" alt="" />
         <img src="./images/home/banner1.jpg" alt="" />
-        <img src="./images/home/banner1.jpg" alt="" /> -->
+        <img src="./images/home/banner1.jpg" alt="" />
+    </div> -->
+    <div class="listcontainer-middle">
+      <Carousel :carouselList="banners" />
     </div>
     <div class="listcontainer-right">
       <div class="listcontainer-right-top">
@@ -20,21 +23,45 @@
         </ul>
       </div>
       <ul class="listcontainer-right-middle">
-        <li class="listcontainer-right-middle-item"><i></i><span>话费</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>机票</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>电影票</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>游戏</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>彩票</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>加油站</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>酒店</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>火车票</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>众筹</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>理财</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>礼品卡</span></li>
-        <li class="listcontainer-right-middle-item"><i></i><span>白条</span></li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>话费</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>机票</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>电影票</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>游戏</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>彩票</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>加油站</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>酒店</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>火车票</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>众筹</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>理财</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>礼品卡</span>
+        </li>
+        <li class="listcontainer-right-middle-item">
+          <i></i><span>白条</span>
+        </li>
       </ul>
       <div class="listcontainer-right-bottom">
-        <img src="../images/home/ad1.png" alt="">
+        <img src="../images/home/ad1.png" alt="" />
       </div>
     </div>
   </div>
@@ -42,6 +69,13 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+// 引入组件
+import Carousel from "@comps/Carousel";
+// 使用swiper实现轮播图,swiper6中的swiper只包含了核心模块，需要其他的要引入
+// import Swiper, { Navigation, Pagination, Autoplay } from "swiper";
+// import "swiper/swiper-bundle.min.css";
+
+// Swiper.use([Navigation, Pagination, Autoplay]);
 
 export default {
   name: "ListContainer",
@@ -53,10 +87,37 @@ export default {
   methods: {
     ...mapActions(["getBanners"]),
   },
+  components: {
+    Carousel,
+  },
   mounted() {
-    // 发送请求banners
     this.getBanners();
   },
+  // async mounted() {
+  //   // 发送请求banners
+  //   await this.getBanners();
+
+  //   // // this.$nextTick是在元素DOM更新后调用其回调函数
+  //   // this.$nextTick(() => {
+  //   //   new Swiper(".swiper-container", {
+  //   //     loop: true,
+  //   //     // If we need pagination
+  //   //     pagination: {
+  //   //       el: ".swiper-pagination",
+  //   //     },
+  //   //     // Navigation arrows
+  //   //     navigation: {
+  //   //       nextEl: ".swiper-button-next",
+  //   //       prevEl: ".swiper-button-prev",
+  //   //     },
+  //   //     // 自动轮播
+  //   //     autoplay: {
+  //   //       delay: 2000, // 间隔时间
+  //   //       disableOnInteraction: false, // 当用户点击下一页之后，轮播继续
+  //   //     },
+  //   //   });
+  //   // });
+  // },
 };
 </script>
 
@@ -70,7 +131,6 @@ export default {
   width: 730px;
   height: 454px;
   padding: 5px;
-  float: left;
   margin-left: 210px;
 }
 .listcontainer-right {
@@ -116,7 +176,7 @@ export default {
   font-weight: 700;
 }
 
-.listcontainer-right-middle{
+.listcontainer-right-middle {
   width: 250px;
   height: 195px;
   border-right: 1px solid #e4e4e4;
@@ -124,7 +184,7 @@ export default {
   flex-wrap: wrap;
   box-sizing: border-box;
 }
-.listcontainer-right-middle-item{
+.listcontainer-right-middle-item {
   width: 61px;
   height: 64px;
   border-left: 1px solid #e4e4e4;
@@ -132,51 +192,51 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.listcontainer-right-middle-item i{
+.listcontainer-right-middle-item i {
   width: 61px;
   height: 40px;
-  background: url('../images/home/icons.png');
+  background: url("../images/home/icons.png");
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(2) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(2) i {
   background-position: -64px 0px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(3) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(3) i {
   background-position: -126px 0px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(4) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(4) i {
   background-position: -190px 0px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(5) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(5) i {
   background-position: -2px -71px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(6) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(6) i {
   background-position: -63px -71px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(7) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(7) i {
   background-position: -126px -71px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(8) i{
- background-position: -193px -71px;
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(8) i {
+  background-position: -193px -71px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(9) i{
-     background-position: 0px -141px;
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(9) i {
+  background-position: 0px -141px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(10) i{
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(10) i {
   background-position: -65px -144px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(11) i{
- background-position: -126px -141px;
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(11) i {
+  background-position: -126px -141px;
 }
-.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(12) i{
- background-position: -193px -141px;
+.listcontainer-right-middle .listcontainer-right-middle-item:nth-child(12) i {
+  background-position: -193px -141px;
 }
-.listcontainer-right-middle-item span{
+.listcontainer-right-middle-item span {
   width: 61px;
   height: 20px;
   line-height: 20px;
   text-align: center;
 }
-.listcontainer-right-bottom{
+.listcontainer-right-bottom {
   width: 250px;
   height: 75px;
   margin-top: 5px;

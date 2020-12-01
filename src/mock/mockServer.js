@@ -9,6 +9,11 @@ const Mock = require('mockjs')
 // 并会返回响应结果(最后一个参数)
 Mock.mock('/mock/banners', 'get', {
   code: 200,
+  // 当随机数据为一条的时候,data不是数组
+  // "data|1": banners
+  // 若想编程式数组，用[]包裹
+  // "data|1": [banners]
+  // 当随机数据为多条的时候,data才是数组
   "data|4": banners
 })
 

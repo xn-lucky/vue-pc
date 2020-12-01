@@ -21,7 +21,6 @@ export default {
     },
 
     async getBanners({ commit }) {
-      debugger;
       const banners = await mockGetBanners();
       commit('GET_BANNERS', banners);
     }
