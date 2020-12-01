@@ -53,7 +53,7 @@ export default {
 <style lang="less" scoped>
 .floor {
   width: 1200px;
-  margin: 0 auto;
+  margin: 15px auto 0;
 }
 .floor-title {
   // height: 50px;
@@ -104,7 +104,7 @@ export default {
 }
 .floor-content-img {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 .floor-content-carousel {
   width: 329px;
