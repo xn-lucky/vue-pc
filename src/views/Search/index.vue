@@ -11,10 +11,10 @@
       <div class="search-navbar">
         <ul class="navbar-list">
           <li class="active"><a href="###">综合⬇</a></li>
-          <li><a href="###">销量⬇</a></li>
-          <li><a href="###">新品⬇</a></li>
-          <li><a href="###">评价⬇</a></li>
-          <li><a href="###">价格⬇</a></li>
+          <li><a href="###">销量</a></li>
+          <li><a href="###">新品</a></li>
+          <li><a href="###">评价</a></li>
+          <li><a href="###">价格</a></li>
         </ul>
       </div>
       <GoodsList />
@@ -30,6 +30,37 @@ import GoodsList from "./GoodsList";
 
 export default {
   name: "Search",
+  data() {
+    return {
+      options: {
+        category1id: "", // 一级分类
+        category2id: "", // 二级分类
+        category3id: "", // 三级分类
+        categoryName: "", // 分类的名称
+        keyword: "", // 关键字 (指搜索框中输入的文字即地址栏中的params参数)
+        order: "", // 排序方式 order:'1:desc'
+        pageNo: 1, // 当前显示的页数
+        pageSize: 5, // 每页的数据条数
+        props: [], // 选择分类商品属性
+        trademark: "", // 品牌 trademark: "4:小米",
+      },
+    };
+  },
+  // 监视地址栏的变化(即传递的参数改变触发)
+  watch: {
+    // 第一种写法：配合mounted一起写
+    $route() {
+      this.updGetProductList();
+    },
+    // 第二种写法: 只需要写watch就可以
+    // $route: {
+    //   handler() {
+    //     this.updGetProductList();
+    //   },
+    //   // 添加immediate属性,一上来就会执行watch中的$route
+    //   immediate: true,
+    // },
+  },
   components: {
     GoodsType,
     SelectType,
@@ -43,10 +74,36 @@ export default {
   },
   methods: {
     ...mapActions(["getProductList"]),
+    updGetProductList() {
+      /**
+       *  发送请求
+       *    1- 有可能一上来就会有参数，在data中定义一下初始化的参数数据
+       *    2- 因为不知道哪些数据有变化，所以将所有的数据都传一下
+       */
+      // 将params参数解构出来并重新赋值
+      // debugger;
+      const { searchText: keyword } = this.$route.params;
+      const {
+        category1id,
+        category2id,
+        category3id,
+        categoryName,
+      } = this.$route.query;
+      const options = {
+        ...this.options,
+        keyword,
+        category1id,
+        category2id,
+        category3id,
+        categoryName,
+      };
+
+      this.getProductList(options);
+    },
   },
   mounted() {
-    // 发送请求
-    this.getProductList();
+    // 页面加载完成后调用一次，还有就是在地址栏发生变化再调请求
+    this.updGetProductList();
   },
 };
 </script>
