@@ -5,7 +5,48 @@
       <a href="###">换一换</a>
     </div>
     <ul class="like-content">
-      <li></li>
+      <li>
+        <img src="../images/home/like_01.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
+      <li>
+        <img src="../images/home/like_02.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
+      <li>
+        <img src="../images/home/like_03.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
+      <li>
+        <img src="../images/home/like_02.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
+      <li>
+        <img src="../images/home/like_03.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
+      <li>
+        <img src="../images/home/like_01.png" alt="" />
+        <div class="like-info">
+          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <h3>￥116.00</h3>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
@@ -42,5 +83,45 @@ export default {
     color: rgb(79, 76, 212);
     text-decoration: none;
   }
+}
+
+.like-content {
+  width: 1178px;
+  height: 250px;
+  padding: 0 10px;
+  border: 1px solid #e4e4e4;
+  display: flex;
+}
+.like-content li {
+  width: 196px;
+  height: 250px;
+  margin: 0 -1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+.like-content img {
+  width: 142px;
+  height: 142px;
+  transition: all 400ms;
+  &:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+.like-content p,
+.like-content h3 {
+  width: 142px;
+  height: 30px;
+}
+.like-content p {
+  margin: 5px 0;
+}
+.like-content h3 {
+  margin: 9px 0;
+}
+.like-info {
+  border-right: 1px solid #e4e4e4;
 }
 </style>
