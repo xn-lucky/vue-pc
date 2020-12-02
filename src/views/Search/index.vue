@@ -32,11 +32,42 @@
       <SelectType :addTrademark="addTrademark" @add-prop="addProp" />
       <div class="search-navbar">
         <ul class="navbar-list">
-          <li class="active"><a href="###">综合⬇</a></li>
-          <li><a href="###">销量</a></li>
-          <li><a href="###">新品</a></li>
-          <li><a href="###">评价</a></li>
-          <li><a href="###">价格</a></li>
+          <li
+            :class="{ active: options.order.indexOf('1') > -1 }"
+            @click="updOrder('1')"
+          >
+            <a>综合</a>
+            <i
+              :class="`iconfont ${
+                isAllDown ? 'icon-arrowdown' : 'icon-arrowup1'
+              }`"
+            ></i>
+          </li>
+          <li><a>销量</a></li>
+          <li><a>新品</a></li>
+          <li><a>评价</a></li>
+          <li
+            :class="{ active: options.order.indexOf('2') > -1 }"
+            @click="updOrder('2')"
+          >
+            <a>价格</a>
+            <span>
+              <i
+                :class="{
+                  iconfont: true,
+                  'icon-arrowup': true,
+                  deactive: options.order.indexOf('2') > -1 && !isPriceGrey,
+                }"
+              ></i>
+              <i
+                :class="{
+                  iconfont: true,
+                  'icon-arrowdown-copy': true,
+                  deactive: options.order.indexOf('2') > -1 && isPriceGrey,
+                }"
+              ></i>
+            </span>
+          </li>
         </ul>
       </div>
       <GoodsList />
@@ -60,12 +91,14 @@ export default {
         category3id: "", // 三级分类
         categoryName: "", // 分类的名称
         keyword: "", // 关键字 (指搜索框中输入的文字即地址栏中的params参数)
-        order: "", // 排序方式 order:'1:desc'
+        order: "1:desc", // 排序方式 order:'1:desc' 默认综合降序
         pageNo: 1, // 当前显示的页数
-        pageSize: 5, // 每页的数据条数
+        pageSize: 10, // 每页的数据条数
         props: [], // 选择分类商品属性
         trademark: "", // 品牌 trademark: "4:小米",
       },
+      isAllDown: true, // 控制综合按钮的箭头图标
+      isPriceGrey: true, // 控制价格按钮的向上或向上的高亮效果
     };
   },
   // 监视地址栏的变化(即传递的参数改变触发)
@@ -171,6 +204,33 @@ export default {
       // 重新发送请求
       this.updGetProductList();
     },
+    updOrder(order) {
+      let [orderNum, orderType] = this.options.order.split(":");
+
+      if (orderNum === order) {
+        // 如果在同一个按钮下点击大于一次
+        // 如果是1综合 箭头图标改变
+        if (order === "1") {
+          this.isAllDown = !this.isAllDown;
+        }
+        if (order === "2") {
+          this.isPriceGrey = !this.isPriceGrey;
+        }
+        orderType = orderType === "desc" ? "asc" : "desc";
+      } else {
+        if (order === "1") {
+          orderType = this.isAllDown ? "desc" : "asc";
+        }
+        if (order === "2") {
+          this.isPriceGrey = true;
+          orderType = "asc";
+        }
+      }
+      // 修改参数数据
+      this.options.order = `${order}:${orderType}`;
+      // 发送请求
+      this.updGetProductList();
+    },
   },
   mounted() {
     // 页面加载完成后调用一次，还有就是在地址栏发生变化再调请求
@@ -232,8 +292,30 @@ export default {
 }
 .navbar-list li {
   padding: 11px 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.navbar-list a:hover {
+  color: rgb(79, 76, 212);
+}
+.navbar-list i {
+  font-size: 12px;
+}
+.navbar-list span {
+  display: flex;
+  flex-direction: column;
+  line-height: 4px;
+  transform: scale(1.6);
 }
 .navbar-list li.active {
   background: #e1251b;
+  color: #fff;
+  a {
+    color: #fff;
+  }
+}
+.navbar-list .deactive {
+  color: rgba(247, 243, 243, 0.7);
 }
 </style>

@@ -6,6 +6,7 @@ import store from './store';
 
 // 引入公共组件
 import './styles/reset.css';
+import './styles/iconfont.css'
 
 import './plugins/element.js';
 

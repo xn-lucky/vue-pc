@@ -1,0 +1,38 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="arrowdown-copy" unicode="&#58915;" d="M726.653 466.694h-429.306l214.846-208.851z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="arrowup" unicode="&#58895;" d="M297.347 257.844h429.306l-214.846 208.851z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="arrowdown" unicode="&#59208;" d="M469.333 768l85.333 0 0-512-85.333 0 0 512zM725.333 256l-426.667 0 213.333-256z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="arrowup1" unicode="&#59209;" d="M512 768l-213.333-256h170.667v-512h85.333v512h170.667z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>
