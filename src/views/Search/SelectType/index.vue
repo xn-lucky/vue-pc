@@ -3,7 +3,11 @@
     <div class="selecttype-content">
       <div class="selecttype-logo">品牌</div>
       <ul class="logo-list">
-        <li v-for="trademark in trademarkList" :key="trademark.tmId">
+        <li
+          v-for="trademark in trademarkList"
+          :key="trademark.tmId"
+          @click="addTrademark(`${trademark.tmId}:${trademark.tmName}`)"
+        >
           {{ trademark.tmName }}
         </li>
       </ul>
@@ -11,7 +15,13 @@
     <div class="type-wrap" v-for="attrs in attrsList" :key="attrs.attrId">
       <div class="type-value">{{ attrs.attrName }}</div>
       <ul class="type-list">
-        <li v-for="(attrValue, index) in attrs.attrValueList" :key="index">
+        <li
+          v-for="(attrValue, index) in attrs.attrValueList"
+          :key="index"
+          @click="
+            $emit('add-prop', `${attrs.attrId}:${attrValue}:${attrs.attrName}`)
+          "
+        >
           {{ attrValue }}
         </li>
       </ul>
@@ -24,6 +34,11 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "SelectTypes",
+  props: {
+    addTrademark: {
+      type: Function,
+    },
+  },
   computed: {
     ...mapGetters(["trademarkList", "attrsList"]),
   },

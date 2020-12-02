@@ -7,17 +7,29 @@
         <ul class="bread-list">
           <!-- 搜索框的param参数 -->
           <li v-show="options.keyword">
-            <span>{{ options.keyword }}</span
+            <span>搜索内容: {{ options.keyword }}</span
             ><i @click="delKeyword">x</i>
           </li>
+          <!-- 显示分类名称 -->
           <li v-show="options.categoryName">
-            <span>{{ options.categoryName }}</span
+            <span>分类名称: {{ options.categoryName }}</span
             ><i @click="delCategoryName">x</i>
+          </li>
+          <!-- 显示品牌 -->
+          <li v-show="options.trademark">
+            <span>品牌: {{ options.trademark.split(":")[1] }}</span
+            ><i @click="delTrademark">x</i>
+          </li>
+          <!-- 显示品牌属性 因为遍历的是数组，有数据就遍历显示没有数据就不会遍历所以用不到v-show-->
+          <li v-for="(prop, index) in options.props" :key="prop">
+            <span
+              >品牌属性: {{ prop.split(":")[1] }}:{{ prop.split(":")[2] }}</span
+            ><i @click="delProp(index)">x</i>
           </li>
         </ul>
       </div>
       <!-- 有品牌数据 -->
-      <SelectType />
+      <SelectType :addTrademark="addTrademark" @add-prop="addProp" />
       <div class="search-navbar">
         <ul class="navbar-list">
           <li class="active"><a href="###">综合⬇</a></li>
@@ -133,6 +145,31 @@ export default {
         name: "search",
         params: this.$route.params,
       });
+    },
+    // 添加品牌
+    addTrademark(trademark) {
+      this.options.trademark = trademark;
+      // 重新发送请求
+      this.updGetProductList();
+    },
+    // 删除品牌
+    delTrademark() {
+      this.options.trademark = "";
+      // 重新发送请求
+      this.updGetProductList();
+    },
+    // 添加品牌属性
+    addProp(prop) {
+      this.options.props.push(prop);
+      // 重新发送请求
+      this.updGetProductList();
+    },
+    // 删除品牌属性可以通过下标进行删除
+    delProp(index) {
+      // 从数组的index开始删除一个元素(即删除当前下标元素)
+      this.options.props.splice(index, 1);
+      // 重新发送请求
+      this.updGetProductList();
     },
   },
   mounted() {
