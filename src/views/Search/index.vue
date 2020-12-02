@@ -4,7 +4,17 @@
     <div class="search-content">
       <div class="search-bread">
         <div class="bread-show">全部结果</div>
-        <ul class="bread-list"></ul>
+        <ul class="bread-list">
+          <!-- 搜索框的param参数 -->
+          <li v-show="options.keyword" @click="delKeyword">
+            <span>{{ options.keyword }}</span
+            ><i>x</i>
+          </li>
+          <li v-show="options.categoryName" @click="delCategoryName">
+            <span>{{ options.categoryName }}</span
+            ><i>x</i>
+          </li>
+        </ul>
       </div>
       <!-- 有品牌数据 -->
       <SelectType />
@@ -97,8 +107,32 @@ export default {
         category3id,
         categoryName,
       };
+      // 同步更新data中的数据
+      this.options = options;
 
       this.getProductList(options);
+    },
+    delKeyword() {
+      // 点击x删除标签属性
+      this.options.keyword = "";
+      // 要触发地址栏改变，进而重新发送请求
+      // 也要清空搜索框中写的params参数
+      this.$bus.$emit("clearSearchText");
+      // 将params参数值为空，
+      this.$router.push({
+        name: "search",
+        query: this.$route.query,
+      });
+    },
+    delCategoryName() {
+      // 点击x删除三级分类名称
+      this.options.categoryName = "";
+      // 要触发地址栏改变，进而重新发送请求
+      // 将query参数值为空，
+      this.$router.push({
+        name: "search",
+        params: this.$route.params,
+      });
     },
   },
   mounted() {
@@ -117,14 +151,30 @@ export default {
   // height: 45px;
   margin: 0 0 5px;
   display: flex;
+  justify-content: flex-start;
+  // align-items: center;
 }
 .bread-show {
-  width: 48px;
-  height: 17px;
+  // width: 48px;
+  // height: 22px;
+  // line-height: 22px;
   padding: 3px 15px;
 }
 .bread-list {
-  margin: 5px 0 18px;
+  margin: 0 0 18px;
+  display: flex;
+  // line-height: 22px;
+}
+.bread-list li {
+  width: 102px;
+  height: 20px;
+  line-height: 20px;
+  padding-left: 7px;
+  border: 1px solid #dedede;
+  margin: 0 5px 5px 0;
+  background: #f7f7f7;
+  display: flex;
+  justify-content: space-around;
 }
 
 .search-navbar {

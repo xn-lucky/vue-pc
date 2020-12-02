@@ -112,6 +112,7 @@ export default {
       // console.log(e.target.dataset);
       const { categoryname, categoryid, categorytype } = e.target.dataset;
 
+      if (!categoryname) return;
       const localtion = {
         name: "search",
         query: {
@@ -190,6 +191,7 @@ export default {
   background-color: #fafafa;
   position: absolute;
   top: 45px;
+  z-index: 2;
 }
 .goodstype-list-detail:hover .goodstype-specific {
   display: block;

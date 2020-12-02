@@ -87,6 +87,12 @@ export default {
       this.$router.push(localtion);
     },
   },
+  mounted() {
+    // 绑定事件，用于回调对搜索框的数据进行清空
+    this.$bus.$on("clearSearchText", () => {
+      this.searchText = "";
+    });
+  },
 };
 </script>
 
