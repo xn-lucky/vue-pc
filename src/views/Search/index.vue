@@ -71,12 +71,25 @@
         </ul>
       </div>
       <GoodsList />
+      <div class="search-pager">
+        <el-pagination
+          @size-change="pageSizeChange"
+          @current-change="currentPageChange"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="options.pageSize"
+          :current-page="options.pageNo"
+          background
+          layout="sizes,prev, pager,next,total"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import GoodsType from "@comps/GoodsType";
 import SelectType from "./SelectType";
 import GoodsList from "./GoodsList";
@@ -93,7 +106,7 @@ export default {
         keyword: "", // 关键字 (指搜索框中输入的文字即地址栏中的params参数)
         order: "1:desc", // 排序方式 order:'1:desc' 默认综合降序
         pageNo: 1, // 当前显示的页数
-        pageSize: 10, // 每页的数据条数
+        pageSize: 5, // 每页的数据条数
         props: [], // 选择分类商品属性
         trademark: "", // 品牌 trademark: "4:小米",
       },
@@ -126,10 +139,11 @@ export default {
     ...mapState({
       productList: (state) => state.search.productList,
     }),
+    ...mapGetters(["total"]),
   },
   methods: {
     ...mapActions(["getProductList"]),
-    updGetProductList() {
+    updGetProductList(pageNo = 1) {
       /**
        *  发送请求
        *    1- 有可能一上来就会有参数，在data中定义一下初始化的参数数据
@@ -151,6 +165,7 @@ export default {
         category2id,
         category3id,
         categoryName,
+        pageNo,
       };
       // 同步更新data中的数据
       this.options = options;
@@ -230,6 +245,22 @@ export default {
       this.options.order = `${order}:${orderType}`;
       // 发送请求
       this.updGetProductList();
+    },
+    pageSizeChange(pageSize) {
+      // 当前页面展示的条数改变触发的事件
+      // console.log("pageSize", pageSize);
+      // 修改options中的数据
+      this.options.pageSize = pageSize;
+      // 发送请求
+      this.updGetProductList();
+    },
+    currentPageChange(pageNo) {
+      // 当前页面是第几页,点击下面的页码时候触发的事件
+      // console.log("pageNo", pageNo);
+      // 修改options中的数据
+      this.options.pageNo = pageNo;
+      // 发送请求
+      this.updGetProductList(pageNo);
     },
   },
   mounted() {
@@ -317,5 +348,10 @@ export default {
 }
 .navbar-list .deactive {
   color: rgba(247, 243, 243, 0.7);
+}
+.search-pager {
+  width: 1200px;
+  margin: 0 auto;
+  text-align: center;
 }
 </style>
