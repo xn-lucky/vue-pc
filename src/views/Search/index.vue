@@ -6,13 +6,13 @@
         <div class="bread-show">全部结果</div>
         <ul class="bread-list">
           <!-- 搜索框的param参数 -->
-          <li v-show="options.keyword" @click="delKeyword">
+          <li v-show="options.keyword">
             <span>{{ options.keyword }}</span
-            ><i>x</i>
+            ><i @click="delKeyword">x</i>
           </li>
-          <li v-show="options.categoryName" @click="delCategoryName">
+          <li v-show="options.categoryName">
             <span>{{ options.categoryName }}</span
-            ><i>x</i>
+            ><i @click="delCategoryName">x</i>
           </li>
         </ul>
       </div>
@@ -119,7 +119,7 @@ export default {
       // 也要清空搜索框中写的params参数
       this.$bus.$emit("clearSearchText");
       // 将params参数值为空，
-      this.$router.push({
+      this.$router.replace({
         name: "search",
         query: this.$route.query,
       });
@@ -129,7 +129,7 @@ export default {
       this.options.categoryName = "";
       // 要触发地址栏改变，进而重新发送请求
       // 将query参数值为空，
-      this.$router.push({
+      this.$router.replace({
         name: "search",
         params: this.$route.params,
       });
@@ -166,7 +166,7 @@ export default {
   // line-height: 22px;
 }
 .bread-list li {
-  width: 102px;
+  // width: 102px;
   height: 20px;
   line-height: 20px;
   padding-left: 7px;
@@ -175,6 +175,15 @@ export default {
   background: #f7f7f7;
   display: flex;
   justify-content: space-around;
+  &:hover {
+    color: #28a3ef;
+  }
+}
+.bread-list i {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
 }
 
 .search-navbar {

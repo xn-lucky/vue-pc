@@ -128,9 +128,14 @@ export default {
           searchText,
         };
       }
-
       // 进行编程式导航,需要传递两个query参数
-      this.$router.push(localtion);
+      // this.$router.push(localtion);
+      // 希望是回退时都是回退到home页,在第一次点击搜索按钮时要进行判断,当前页面的地址是不是search/home,如果是home页就用push否则使用replace
+      if (/^\/search/.test(this.$route.path)) {
+        this.$router.replace(localtion);
+      } else {
+        this.$router.push(localtion);
+      }
     },
   },
   mounted() {

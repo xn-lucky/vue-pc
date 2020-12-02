@@ -83,8 +83,24 @@ export default {
       // if (categoryName) {
       //   localtion.query = this.$route.query;
       // }
+      // 希望是回退时都是回退到home页,在第一次点击搜索按钮时要进行判断,当前页面的地址是不是search/home,如果是home页就用push否则使用replace
+      // if (this.$route.path.indexOf("/search") > -1) {
+      // if (/^\/search/.test(this.$route.path)) {
+      if (/^\/search/.test(this.$route.path)) {
+        this.$router.replace(localtion);
+      } else {
+        this.$router.push(localtion);
+      }
+      /*
+        判断路径是否存在/search有很多种方式
+         1- this.$route.path.indexOf("/search") > -1 是否包含/search
+         2- /^\/search/.test(this.$route.path) 正则 是否包含/search
+         3- this.$route.path.includes("/search") 是否包含/search
+         4- this.$route.path.startsWith("/search") 是否以/search开头
 
-      this.$router.push(localtion);
+         1和2的兼容性较好
+
+       */
     },
   },
   mounted() {
