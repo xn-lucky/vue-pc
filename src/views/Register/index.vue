@@ -104,7 +104,7 @@ export default {
     phone(newValue) {
       debugger;
       // 校验手机号格式是否正确
-      if (newValue && /^[1][0-9]{10}/.test(newValue)) {
+      if (newValue && !/^[1][0-9]{10}/.test(newValue)) {
         this.phoneCheck = false;
         return;
       }
@@ -133,9 +133,13 @@ export default {
       }
       // 注册成功就显示 提示注册成功3秒后跳转登录页面,也可手动跳转
       // 发送注册请求
-      this.getRegister()
-        .then(() => {})
-        .catch(() => {});
+      this.getRegister({ phone, code, password })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       // 回归初始化
       this.isShow = false;
     },

@@ -5,10 +5,10 @@ import mockRequest from '@utils/mockRequest';
 */
 
 export const mockGetBanners = () => {
-  return mockRequest({
-    method: "GET",
-    url: '/banners'
-  });
+	return mockRequest({
+		method: 'GET',
+		url: '/banners'
+	});
 };
 
 /*
@@ -16,8 +16,19 @@ export const mockGetBanners = () => {
 */
 
 export const mockGetFloors = () => {
-  return mockRequest({
-    method: "GET",
-    url: '/floors'
-  });
+	return mockRequest({
+		method: 'GET',
+		url: '/floors'
+	});
+};
+
+/*
+  实现mock模拟数据,请求方法like
+*/
+
+export const mockGetLikes = () => {
+	return mockRequest({
+		method: 'GET',
+		url: '/likes'
+	});
 };
