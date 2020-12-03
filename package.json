@@ -63,7 +63,11 @@
       "semi": 0,
       "no-new": 0,
       "indent": 0,
-      "prefer-const": 0
+      "prefer-const": 0,
+      "object-curly-newline": 0,
+      "prefer-template": 0,
+      "no-param-reassign": 0,
+      "no-plusplus": 0
     }
   },
   "browserslist": [
