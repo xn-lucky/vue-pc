@@ -5,14 +5,14 @@
       <a href="###">换一换</a>
     </div>
     <ul class="like-content">
-      <li>
-        <img src="../images/home/like_01.png" alt="" />
+      <li v-for="like in likes" :key="like.id">
+        <img :src="like.imgUrl" alt="" />
         <div class="like-info">
-          <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
+          <p>{{ like.imgDescript }}</p>
           <h3>￥116.00</h3>
         </div>
       </li>
-      <li>
+      <!-- <li>
         <img src="../images/home/like_02.png" alt="" />
         <div class="like-info">
           <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
@@ -46,14 +46,27 @@
           <p>阳光美包新款单肩包女包时尚子母包四件套女</p>
           <h3>￥116.00</h3>
         </div>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "Like",
+  computed: {
+    ...mapState({
+      likes: (state) => state.home.likes,
+    }),
+  },
+  methods: {
+    ...mapActions(["getLikes"]),
+  },
+  mounted() {
+    this.getLikes();
+  },
 };
 </script>
 
