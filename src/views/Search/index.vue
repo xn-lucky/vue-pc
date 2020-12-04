@@ -71,8 +71,10 @@
         </ul>
       </div>
       <GoodsList />
+
       <div class="search-pager">
-        <el-pagination
+        <!-- elementUI 分页器 -->
+        <!-- <el-pagination
           @size-change="pageSizeChange"
           @current-change="currentPageChange"
           :page-sizes="[5, 10, 15, 20]"
@@ -82,7 +84,21 @@
           layout="sizes,prev, pager,next,total"
           :total="total"
         >
-        </el-pagination>
+        </el-pagination> -->
+        <!-- 手写一个分页器,定义成一个组件
+                1- 分页需要用到的数据
+                 1-1 currentPage 当前页
+                 1-2 pageSize 每页多少条数据
+                 1-3 total 数据总条数
+                 1-4 通过total和pageSize可以获取到总页数 totalPage
+          -->
+        <Pager
+          @current-change="updGetProductList"
+          :currentPage="options.pageNo"
+          :pageSize="options.pageSize"
+          :total="total"
+          :pagerCount="7"
+        />
       </div>
     </div>
   </div>
@@ -93,6 +109,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 import GoodsType from "@comps/GoodsType";
 import SelectType from "./SelectType";
 import GoodsList from "./GoodsList";
+import Pager from "./Pager";
 
 export default {
   name: "Search",
@@ -133,6 +150,7 @@ export default {
     GoodsType,
     SelectType,
     GoodsList,
+    Pager,
   },
   computed: {
     // 这种获取数据太麻烦了,如果想要获取到productList下的数据，很麻烦，想要将productList下的数据也可以通过this获取,利用getters获取
@@ -353,5 +371,6 @@ export default {
   width: 1200px;
   margin: 0 auto;
   text-align: center;
+  display: flex;
 }
 </style>
