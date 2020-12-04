@@ -3,9 +3,11 @@
 import home from './home';
 import search from './search';
 import register from './register';
+import detail from './detail';
 
 export default {
   home,
   search,
-  register
+  register,
+  detail
 };

@@ -3,10 +3,14 @@
     <ul class="goodslist-list">
       <li v-for="goods in goodsList" :key="goods.id">
         <div class="goodslist-img">
-          <a href="###"><img :src="goods.defaultImg" /></a>
+          <router-link :to="`/detail/${goods.id}`"
+            ><img :src="goods.defaultImg"
+          /></router-link>
         </div>
         <div class="goodslist-price">￥{{ goods.price }}</div>
-        <div class="goodslist-type">{{ goods.title }}</div>
+        <router-link :to="`/detail/${goods.id}`" class="goodslist-type">{{
+          goods.title
+        }}</router-link>
         <div class="evaluate-count">已有<span>2000</span>人评价</div>
         <div class="goodslist-add">
           <a class="cart" href="###">加入购物车</a>
