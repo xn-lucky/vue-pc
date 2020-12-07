@@ -17,3 +17,11 @@ export const reqLogin = (phone, password) => {
     // params: {}// 传递的是查询字符串参数,一般用于get请求
   });
 };
+// 发送注册请求
+export const reqGetRegister = (data) => {
+  return instance({
+    method: 'POST',
+    url: '/user/passport/register',
+    data
+  })
+}

@@ -3,7 +3,7 @@
   工具函数模块,公共部分
 */
 import axios from 'axios';
-
+import { Message } from 'element-ui'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -42,10 +42,18 @@ instance.interceptors.response.use(
     if (res.data.code === 200) {
       return res.data.data;
     }
-    return Promise.reject(res.data.message);
+    // 在拦截器中处理错误,就不需要在页面发送请求后用catch和then获成功和失败了
+    // 请求时捕获失败使用try...catch捕获失败
+    const { message, data } = res.data
+    const err = message + data ? data : ''
+    Message.error(err)
+    return Promise.reject(err);
   },
   (error) => {
     NProgress.done();
+    // 处理错误信息
+    const message = error.message || '网络错误';
+    Message.error(message)
     return Promise.reject(error);
   }
 );

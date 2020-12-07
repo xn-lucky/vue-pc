@@ -109,18 +109,17 @@
                   "
                   ref="clickDd"
                 >
-                  <!-- class="active" -->
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" />
+                <a href="javascript:" class="plus" @click="add(1)">+</a>
+                <a href="javascript:" class="mins" @click="sub(-1)">-</a>
               </div>
-              <div class="add">
+              <div class="add" @click="addShopCart">
                 <a href="javascript:">加入购物车</a>
               </div>
             </div>
@@ -370,6 +369,7 @@ export default {
   data() {
     return {
       currentImgIndex: 0,
+      skuNum: 1, // 当前商品的数量
     };
   },
   components: {
@@ -379,12 +379,6 @@ export default {
   },
   computed: {
     ...mapGetters(["categoryView", "spuSaleAttrList", "skuInfo"]),
-  },
-  watch: {
-    spuSaleAttrList() {
-      let arr = new Array(this.spuSaleAttrList.length);
-      arr.fill(0);
-    },
   },
   methods: {
     ...mapActions(["getDetailInfo"]),
@@ -399,6 +393,19 @@ export default {
       spuSaleAttrValueList.forEach((value) => (value.isChecked = "0"));
       // 将当前选中的值的isChecked设置1
       attrValue.isChecked = "1";
+    },
+    add(count) {
+      this.skuNum += count;
+    },
+    sub(count) {
+      this.skuNum -= count;
+      if (this.skuNum <= 1) {
+        this.skuNum = 1;
+      }
+    },
+    // 点击 加入购物车，跳转到addcartsuccess?skuNum=1页面，传递一个参数
+    addShopCart() {
+      this.$router.push(`/addcartsuccess?skuNum=${this.skuNum}`);
     },
   },
   mounted() {
@@ -584,6 +591,7 @@ export default {
                 float: left;
                 border-right: 0;
                 text-align: center;
+                outline: none;
               }
 
               .plus,

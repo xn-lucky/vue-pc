@@ -7,31 +7,38 @@
     <div class="register-content">
       <div class="content-layout first">
         <label>手机号: </label>
-        <input
-          class="content-input"
-          type="text"
-          placeholder="请输入你的手机号"
-          name="phone"
-          v-model="phone"
-        />
-        <!-- <span class="err-msg">手机号是必须的</span> -->
+        <ValidationProvider
+          rules="required|phoneLength|phoneRep"
+          v-slot="{ errors }"
+        >
+          <input
+            class="content-input"
+            type="text"
+            placeholder="请输入你的手机号"
+            name="phone"
+            v-model="phone"
+          />
+          <span class="err-msg">{{ errors[0] }}</span>
+        </ValidationProvider>
       </div>
       <div class="content-layout">
         <label>验证码: </label>
-        <input
-          class="content-input"
-          type="text"
-          name="code"
-          placeholder="请输入验证码"
-          v-model="code"
-        />
-        <img
-          ref="code"
-          src="/api/user/passport/code"
-          alt=""
-          @click="$refs.code.src = '/api/user/passport/code'"
-        />
-        <!-- <span class="err-msg">验证码时必须的</span> -->
+        <ValidationProvider rules="codeCheck" v-slot="{ errors }">
+          <input
+            class="content-input"
+            type="text"
+            name="code"
+            placeholder="请输入验证码"
+            v-model="code"
+          />
+          <img
+            ref="code"
+            src="/api/user/passport/code"
+            alt=""
+            @click="$refs.code.src = '/api/user/passport/code'"
+          />
+          <span class="err-msg">{{ errors[0] }}</span>
+        </ValidationProvider>
       </div>
       <div class="content-layout">
         <label>登录密码: </label>
@@ -74,6 +81,33 @@
 
 <script>
 import { mapActions } from "vuex";
+import { ValidationProvider, extend } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
+
+extend("required", {
+  ...required,
+  message: "手机号是必填的~",
+});
+extend("phoneLength", {
+  validate(value) {
+    return value.length === 11;
+  },
+  message: "手机号长度应为11位",
+});
+extend("phoneRep", {
+  validate(value) {
+    return /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/.test(
+      value
+    );
+  },
+  message: "手机号格式不对",
+});
+extend("codeCheck", {
+  validate(value) {
+    return /^\d{4}$/.test(value);
+  },
+  message: "验证码应为四位数字~",
+});
 
 export default {
   name: "Register",
@@ -86,21 +120,47 @@ export default {
       checkAgree: false, // 是否勾选协议
     };
   },
-
+  components: {
+    ValidationProvider,
+  },
   methods: {
     ...mapActions(["getRegister"]),
     // 点击注册按钮
-    register() {
+    async register() {
       // 首先判断是否都有输入值
       const { phone, code, password, checkpassword, checkAgree } = this;
-      this.isShow = true;
       // 有一个成立都会进来(没有输入信息)
-      if (!phone || !code || !password || !checkpassword || !checkAgree) {
+      // if (!phone || !code || !password || !checkpassword || !checkAgree) {
+      //   this.$message({
+      //     message: `请输入完整注册信息~~`,
+      //     type: "error",
+      //     duration: 800,
+      //   });
+      //   return;
+      // }
+      // 判断登录密码与确认密码是否一致
+      if (!password || password !== checkpassword) {
+        this.$message({
+          message: "登录密码与确认密码不一致~~",
+          type: "error",
+          duration: 800,
+        });
         return;
       }
+      if (!checkAgree) {
+        this.$message({
+          message: `请先勾选协议~~`,
+          type: "error",
+          duration: 800,
+        });
+        return;
+      }
+
       // 注册成功就显示 提示注册成功3秒后跳转登录页面,也可手动跳转
       // 发送注册请求
-      this.getRegister({ phone, code, password });
+      await this.getRegister({ phone, code, password });
+      // 成功后跳转到登陆页面
+      this.$router.replace("/login");
     },
   },
 };

@@ -2,12 +2,12 @@
 // 汇总各个页面的state...
 import home from './home';
 import search from './search';
-import register from './register';
+import user from './user';
 import detail from './detail';
 
 export default {
   home,
   search,
-  register,
+  user,
   detail
 };

@@ -6,6 +6,8 @@ import Login from '@views/Login';
 import Register from '@views/Register';
 import Search from '@views/Search';
 import Detail from '@views/Detail';
+import AddCartSuccess from '@views/AddCartSuccess';
+import ShopCart from '@views/ShopCart';
 
 // 重写VueRouter原型上的push/replace方法
 const { push, replace } = VueRouter.prototype;// 将push赋予另外值,为以后调用
@@ -63,8 +65,19 @@ export default new VueRouter({
       path: '/detail/:id',
       component: Detail,
     },
+    {
+      name: 'addcartsuccess',
+      path: '/addcartsuccess',
+      component: AddCartSuccess,
+    },
+    {
+      name: 'shopcart',
+      path: '/shopcart',
+      component: ShopCart,
+    },
   ],
-  scrollBehaviorHandler() {
-    return { x: 0, y: 0 }
-  }
+  // 每次切换路由页面滚动条位置
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
 });
