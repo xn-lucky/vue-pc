@@ -29,15 +29,31 @@
             <span class="price">{{ cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
+            <button
+              href="javascript:void(0)"
+              class="mins"
+              @click="updShopCart(cart.skuId, -1)"
+              :disabled="cart.skuNum === 1"
+            >
+              -
+            </button>
             <input
               autocomplete="off"
               type="text"
               :value="cart.skuNum"
               minnum="1"
               class="itxt"
+              @blur="updateBlur(cart.skuId, cart.skuNum, $event)"
+              @input="updateInput"
             />
-            <a href="javascript:void(0)" class="plus">+</a>
+            <button
+              href="javascript:void(0)"
+              class="plus"
+              @click="updShopCart(cart.skuId, 1)"
+              :disabled="cart.skuNum === 10"
+            >
+              +
+            </button>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
@@ -61,10 +77,13 @@
         <a href="#none">清除下柜商品</a>
       </div>
       <div class="money-box">
-        <div class="chosed">已选择 <span>{{}}</span>件商品</div>
+        <div class="chosed">
+          已选择 <span>{{ allNum }}</span
+          >件商品
+        </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
-          <i class="summoney">{{}}</i>
+          <i class="summoney">{{ allPrice }}</i>
         </div>
         <div class="sumbtn">
           <a class="sum-btn" href="###" target="_blank">结算</a>
@@ -75,7 +94,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "ShopCart",
@@ -83,6 +102,45 @@ export default {
     ...mapState({
       cartList: (state) => state.shopcart.cartList,
     }),
+    allPrice() {
+      return this.cartList
+        .filter((cart) => cart.isChecked === 1)
+        .reduce((p, c) => p + c.skuPrice * c.skuNum, 0);
+    },
+    allNum() {
+      return this.cartList
+        .filter((cart) => cart.isChecked === 1)
+        .reduce((p, c) => p + c.skuNum, 0);
+    },
+  },
+  methods: {
+    ...mapActions(["addShopCart"]),
+    updShopCart(skuId, skuNum) {
+      // 点击商品的加减按钮
+      // console.log(skuNum);
+      this.addShopCart({ skuId, skuNum });
+    },
+    updateBlur(skuId, skuNum, e) {
+      console.log(skuId, skuNum, e.target.value);
+      // 直接对输入框中的值进行改变
+      if (+e.target.value === skuNum) return; // 说明没有改变
+      // 发送请求
+      this.addShopCart({ skuId, skuNum: e.target.value - skuNum });
+    },
+    updateInput(e) {
+      // 检验输入时的格式
+      let skuNum = +e.target.value.replace(/\D+/g, "");
+
+      if (skuNum < 1) {
+        skuNum = 1;
+      }
+      // 假设库存就10个
+      if (skuNum > 10) {
+        skuNum = 10;
+      }
+      // 给表单赋值，显示在页面上
+      e.target.value = skuNum;
+    },
   },
   mounted() {
     // 发送请求，请求购物车数据
