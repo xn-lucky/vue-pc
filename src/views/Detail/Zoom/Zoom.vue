@@ -1,21 +1,53 @@
 <template>
   <div class="spec-preview">
-    <img :src="skuInfo.skuDefaultImg" />
-    <div class="event"></div>
+    <img :src="imgUrl" />
+    <div class="event" @mousemove="move" ref="smallImg"></div>
     <div class="big">
-      <img :src="skuInfo.skuDefaultImg" />
+      <img :src="bigImgUrl" ref="bigImg" />
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   name: "Zoom",
-  computed: {
-    ...mapGetters(["skuInfo"]),
+  props: ["imgUrl", "bigImgUrl"],
+  methods: {
+    move(e) {
+      /**
+         1- 获取鼠标的位置 e.clientX e.clientY（这是鼠标到窗口的距离），
+         2- 获取小图的left和top的位置
+       */
+      const { mask, bigImg, smallImg } = this.$refs;
+      const mouseToSImg = {
+        x: e.clientX - smallImg.getBoundingClientRect().left,
+        y: e.clientY - smallImg.getBoundingClientRect().top,
+      };
+
+      const maskTo = {
+        x: mouseToSImg.x - mask.offsetWidth / 2,
+        y: mouseToSImg.y - mask.offsetHeight / 2,
+      };
+
+      if (maskTo.x >= smallImg.clientWidth - mask.offsetWidth) {
+        maskTo.x = smallImg.clientWidth - mask.offsetWidth;
+      } else if (maskTo.x <= 0) {
+        maskTo.x = 0;
+      }
+
+      if (maskTo.y >= smallImg.clientHeight - mask.offsetHeight) {
+        maskTo.y = smallImg.clientHeight - mask.offsetHeight;
+      } else if (maskTo.y <= 0) {
+        maskTo.y = 0;
+      }
+
+      mask.style.left = maskTo.x + "px";
+      mask.style.top = maskTo.y + "px";
+      // 乘以2是因为小图与大图的比例是2
+      bigImg.style.left = -2 * maskTo.x + "px";
+      bigImg.style.top = -2 * maskTo.y + "px";
+    },
   },
 };
 </script>

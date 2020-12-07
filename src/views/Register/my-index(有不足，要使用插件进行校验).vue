@@ -14,7 +14,9 @@
           name="phone"
           v-model="phone"
         />
-        <!-- <span class="err-msg">手机号是必须的</span> -->
+        <span class="err-msg" v-show="isShow && phone === ''">{{
+          phoneCheck ? "手机号是必须的" : "手机号格式不对"
+        }}</span>
       </div>
       <div class="content-layout">
         <label>验证码: </label>
@@ -31,7 +33,9 @@
           alt=""
           @click="$refs.code.src = '/api/user/passport/code'"
         />
-        <!-- <span class="err-msg">验证码时必须的</span> -->
+        <span class="err-msg" v-show="isShow && code === ''"
+          >验证码时必须的</span
+        >
       </div>
       <div class="content-layout">
         <label>登录密码: </label>
@@ -42,7 +46,9 @@
           placeholder="请输入你的登录密码"
           v-model="password"
         />
-        <!-- <span class="err-msg">登录密码是必须的</span> -->
+        <span class="err-msg" v-show="isShow && password === ''"
+          >登录密码是必须的</span
+        >
       </div>
       <div class="content-layout">
         <label>确认密码: </label>
@@ -53,14 +59,18 @@
           placeholder="请输入确认密码"
           v-model="checkpassword"
         />
-        <!-- <span class="err-msg">确认密码是必须的</span> -->
+        <span class="err-msg" v-show="isShow && checkpassword === ''">{{
+          passwordCheck ? "确认密码是必须的" : "确认密码要与登录密码一致"
+        }}</span>
       </div>
       <div class="content-agreement">
         <input
           type="checkbox"
-          v-model="checkAgree"
+          v-model="check"
         />同意协议并注册《尚品汇用户协议》
-        <!-- <span class="err-agreement">协议是必勾的</span> -->
+        <span class="err-agreement" v-show="isShow && check === ''"
+          >协议是必勾的</span
+        >
       </div>
       <div class="content-button">
         <!-- <span class="err-msg"></span> -->
@@ -83,24 +93,55 @@ export default {
       code: "", // 验证码
       password: "", // 登录密码
       checkpassword: "", // 确认密码
-      checkAgree: false, // 是否勾选协议
+      check: "", // 是否勾选协议
+      isShow: false, // 是否显示错误信息
+
+      phoneCheck: true,
+      passwordCheck: true,
     };
   },
-
+  watch: {
+    phone(newValue) {
+      debugger;
+      // 校验手机号格式是否正确
+      if (newValue && !/^[1][0-9]{10}/.test(newValue)) {
+        this.phoneCheck = false;
+        return;
+      }
+      this.phoneCheck = true;
+    },
+    checkpassword(newValue) {
+      // 判断登录密码和确认密码是否一致
+      if (newValue && this.password !== newValue) {
+        this.passwordCheck = false;
+        return;
+      }
+      this.passwordCheck = true;
+    },
+  },
   methods: {
     ...mapActions(["getRegister"]),
     // 点击注册按钮
     register() {
+      debugger;
       // 首先判断是否都有输入值
-      const { phone, code, password, checkpassword, checkAgree } = this;
+      const { phone, code, password, checkpassword, check } = this;
       this.isShow = true;
       // 有一个成立都会进来(没有输入信息)
-      if (!phone || !code || !password || !checkpassword || !checkAgree) {
+      if (!phone || !code || !password || !checkpassword || !check) {
         return;
       }
       // 注册成功就显示 提示注册成功3秒后跳转登录页面,也可手动跳转
       // 发送注册请求
-      this.getRegister({ phone, code, password });
+      this.getRegister({ phone, code, password })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // 回归初始化
+      this.isShow = false;
     },
   },
 };

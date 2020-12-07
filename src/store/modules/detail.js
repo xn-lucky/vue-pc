@@ -8,7 +8,9 @@ export default {
     detailInfo: {
       categoryView: {},
       spuSaleAttrList: [],
-      skuInfo: {}
+      skuInfo: {
+        skuImageList: []
+      }
     }
   },
   getters: {

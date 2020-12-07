@@ -3,10 +3,13 @@
     <div class="swiper-wrapper">
       <div
         class="swiper-slide"
-        v-for="skuImage in skuImageList"
+        v-for="(skuImage, index) in skuImageList"
         :key="skuImage.id"
       >
-        <img :src="skuImage.imgUrl" />
+        <img
+          :src="skuImage.imgUrl"
+          @click="$listeners['upd-currentImgIndex'](index)"
+        />
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -21,9 +24,7 @@ import "swiper/swiper-bundle.min.css";
 export default {
   name: "ImageList",
   props: {
-    skuImageList: {
-      type: Array,
-    },
+    skuImageList: Array,
   },
   // 不能再mounted中进行new Swiper 因为一上来skuImageList不一定会有数据
   watch: {
@@ -39,11 +40,11 @@ export default {
     newSwiper() {
       // new Swiper(".swiper-container", {
       new Swiper(this.$refs.swiper, {
-        loop: true,
+        // loop: true,
 
-        slidesPerView: 4,
-        spaceBetween: 90,
-        slidesPerGroup: 4,
+        slidesPerView: 5,
+        spaceBetween: 30,
+        slidesPerGroup: 5,
         loopFillGroupWithBlank: true,
         navigation: {
           nextEl: ".swiper-button-next",

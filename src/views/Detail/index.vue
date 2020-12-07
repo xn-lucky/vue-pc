@@ -7,28 +7,44 @@
     <section class="con">
       <!-- 导航路径区域 -->
       <div class="conPoin">
-        <span>手机、数码、通讯</span>
-        <span>手机</span>
-        <span>Apple苹果</span>
-        <span>iphone 6S系类</span>
+        <span>{{ categoryView.category1Name }}</span>
+        <span>{{ categoryView.category2Name }}</span>
+        <span>{{ categoryView.category3Name }}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
-          <!--放大镜效果-->
-          <Zoom />
+          <!--
+             放大镜效果
+               有两种情况
+                 1- 后台给你的数据是分小图和中图和大图的，然后获取小图的下标后，再根据对应下标去中图和大图的数据中找到对应的图片(一般情况下小图中图大图的图片顺序是一样的)
+                 2- 后台并没有给你中图和大图的图片数据,所以拿到小图下标后在小图数据中找到对应数据传给大图和中图显示即可
+           -->
+          <Zoom
+            :imgUrl="
+              skuInfo.skuImageList[currentImgIndex] &&
+              skuInfo.skuImageList[currentImgIndex].imgUrl
+            "
+            :bigImgUrl="
+              skuInfo.skuImageList[currentImgIndex] &&
+              skuInfo.skuImageList[currentImgIndex].imgUrl
+            "
+          />
           <!-- 小图列表 -->
-          <ImageList :skuImageList="skuInfo.skuImageList" />
+          <ImageList
+            :skuImageList="skuInfo.skuImageList"
+            @upd-currentImgIndex="updCurrentImgIndex"
+          />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
             <h3 class="InfoName">
-              Apple iPhone 6s（A1700）64G玫瑰金色 移动通信电信4G手机
+              {{ skuInfo.skuName }}
             </h3>
             <p class="news">
-              推荐选择下方[移动优惠购],手机套餐齐搞定,不用换号,每月还有花费返
+              {{ skuInfo.skuDesc }}
             </p>
             <div class="priceArea">
               <div class="priceArea1">
@@ -37,7 +53,7 @@
                 </div>
                 <div class="price">
                   <i>¥</i>
-                  <em>5299</em>
+                  <em>{{ skuInfo.price }}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -76,29 +92,26 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
+              <dl v-for="spuSaleAttr in spuSaleAttrList" :key="spuSaleAttr.id">
+                <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
+                <dd
+                  v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
+                  :key="spuSaleAttrValue.id"
+                  changepirce="0"
+                  :class="{
+                    active: spuSaleAttrValue.isChecked === '1',
+                  }"
+                  @click="
+                    checkValue(
+                      spuSaleAttrValue,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
+                  ref="clickDd"
+                >
+                  <!-- class="active" -->
+                  {{ spuSaleAttrValue.saleAttrValueName }}
+                </dd>
               </dl>
             </div>
             <div class="cartWrap">
@@ -354,7 +367,11 @@ import Zoom from "./Zoom/Zoom";
 
 export default {
   name: "Detail",
-
+  data() {
+    return {
+      currentImgIndex: 0,
+    };
+  },
   components: {
     ImageList,
     Zoom,
@@ -363,8 +380,26 @@ export default {
   computed: {
     ...mapGetters(["categoryView", "spuSaleAttrList", "skuInfo"]),
   },
+  watch: {
+    spuSaleAttrList() {
+      let arr = new Array(this.spuSaleAttrList.length);
+      arr.fill(0);
+    },
+  },
   methods: {
     ...mapActions(["getDetailInfo"]),
+    // 创建一个更新下标的方法
+    updCurrentImgIndex(index) {
+      this.currentImgIndex = index;
+    },
+    checkValue(attrValue, spuSaleAttrValueList) {
+      //  先判断当前选中的元素的isCheck的值是否是选中状态，是的就返回
+      if (attrValue.isChecked === "1") return;
+      // 不是选中状态就将全部清空，再给当前选中的值的isChecked设置1
+      spuSaleAttrValueList.forEach((value) => (value.isChecked = "0"));
+      // 将当前选中的值的isChecked设置1
+      attrValue.isChecked = "1";
+    },
   },
   mounted() {
     this.getDetailInfo(this.$route.params.id);

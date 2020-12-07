@@ -68,7 +68,8 @@
       "prefer-template": 0,
       "no-param-reassign": 0,
       "no-plusplus": 0,
-      "no-tabs":0
+      "no-tabs": 0,
+      "no-return-assign": 0
     }
   },
   "browserslist": [
