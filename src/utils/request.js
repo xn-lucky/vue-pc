@@ -5,8 +5,11 @@
 import axios from 'axios';
 import { Message } from 'element-ui'
 import NProgress from 'nprogress';
+import getUserTempId from '@utils/getUserTempId'
 import 'nprogress/nprogress.css';
 
+// 内存中定义，即写在外边，不需要每次请求都去函数中调用返回
+const userTempId = getUserTempId()
 // 创建一个axios为instance,功能与axios类似，但是没有axios本身的静态方法
 const instance = axios.create({
   // baseURL: 'http://182.92.128.115/api',
@@ -23,6 +26,8 @@ instance.interceptors.request.use(
     // console.log(config);
     // 开始设置进度条
     NProgress.start();
+    // 设置请求头
+    config.headers.userTempId = userTempId;
     return config;
   }
   // 第二个参数是返回失败的请求响应，若是只有一个请求拦截器,则不会触发失败的，底层是返回的成功

@@ -119,7 +119,7 @@
                 <a href="javascript:" class="plus" @click="add(1)">+</a>
                 <a href="javascript:" class="mins" @click="sub(-1)">-</a>
               </div>
-              <div class="add" @click="addShopCart">
+              <div class="add" @click="shopCart">
                 <a href="javascript:">加入购物车</a>
               </div>
             </div>
@@ -359,7 +359,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import GoodsType from "@comps/GoodsType";
 import ImageList from "./ImageList/ImageList";
 import Zoom from "./Zoom/Zoom";
@@ -378,10 +378,13 @@ export default {
     GoodsType,
   },
   computed: {
+    ...mapState({
+      addShopCartInfo: (state) => state.detail.addShopCartInfo,
+    }),
     ...mapGetters(["categoryView", "spuSaleAttrList", "skuInfo"]),
   },
   methods: {
-    ...mapActions(["getDetailInfo"]),
+    ...mapActions(["getDetailInfo", "addShopCart"]),
     // 创建一个更新下标的方法
     updCurrentImgIndex(index) {
       this.currentImgIndex = index;
@@ -404,8 +407,41 @@ export default {
       }
     },
     // 点击 加入购物车，跳转到addcartsuccess?skuNum=1页面，传递一个参数
-    addShopCart() {
-      this.$router.push(`/addcartsuccess?skuNum=${this.skuNum}`);
+    async shopCart() {
+      const { addShopCart, skuInfo, skuNum, currentImgIndex } = this;
+      // 获取数据 保存在sessionStorage中
+      let str = ""; // 保存商品属性
+      // 获取商品的属性
+      this.spuSaleAttrList.forEach((item) => {
+        item.spuSaleAttrValueList.forEach((value) => {
+          if (value.isChecked === "1") {
+            str += value.saleAttrValueName + "/";
+          }
+        });
+      });
+
+      // 将数据跳转到商品成功添加购物车页面,将商品信息保存
+      let addShopCartInfo = {
+        id: skuInfo.id,
+        skuName: skuInfo.skuName,
+        version: str,
+        imgUrl: skuInfo.skuImageList[currentImgIndex].imgUrl,
+        skuNum,
+      };
+      // 捕获错误
+      try {
+        // 发送请求 添加购物车数据
+        await addShopCart({ skuId: skuInfo.id, skuNum });
+        // 将数据保存在sessionStorage中
+        sessionStorage.setItem(
+          "addShopCartInfo",
+          JSON.stringify(addShopCartInfo)
+        );
+        // 添加成功后才会跳转
+        this.$router.push(`/addcartsuccess?skuNum=${skuNum}`);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
   mounted() {
