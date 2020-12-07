@@ -428,17 +428,19 @@ export default {
         imgUrl: skuInfo.skuImageList[currentImgIndex].imgUrl,
         skuNum,
       };
+      console.log(addShopCartInfo);
       // 捕获错误
       try {
         // 发送请求 添加购物车数据
         await addShopCart({ skuId: skuInfo.id, skuNum });
+        console.log(123);
         // 将数据保存在sessionStorage中
         sessionStorage.setItem(
           "addShopCartInfo",
           JSON.stringify(addShopCartInfo)
         );
         // 添加成功后才会跳转
-        this.$router.push(`/addcartsuccess?skuNum=${skuNum}`);
+        this.$router.push(`/addcartsuccess?skuNum=${this.skuNum}`);
       } catch (e) {
         console.log(e);
       }

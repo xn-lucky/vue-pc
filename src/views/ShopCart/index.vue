@@ -17,6 +17,7 @@
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked === 1"
+              @click="handleCheck"
             />
           </li>
           <li class="cart-list-con2">
@@ -140,6 +141,9 @@ export default {
       }
       // 给表单赋值，显示在页面上
       e.target.value = skuNum;
+    },
+    handleCheck() {
+      console.log(123);
     },
   },
   mounted() {
