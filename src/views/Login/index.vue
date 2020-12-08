@@ -85,24 +85,28 @@ export default {
   methods: {
     ...mapActions(["login"]),
     async rlogin() {
-      const { phone, password } = this;
-      if (phone.trim() && password.trim()) {
-        // 发送请求
-        await this.login({ phone, password });
-        // await this.$store.dispatch("login", { phone, password });
-        // 登陆成功后判断页面上的自动登录是否有勾选，有勾选就将token保存在localStorage中
-        if (this.isCheck) {
-          localStorage.setItem("token", this.token);
-          localStorage.setItem("name", this.name);
+      try {
+        const { phone, password } = this;
+        if (phone.trim() && password.trim()) {
+          // 发送请求
+          await this.login({ phone, password });
+          // await this.$store.dispatch("login", { phone, password });
+          // 登陆成功后判断页面上的自动登录是否有勾选，有勾选就将token保存在localStorage中
+          if (this.isCheck) {
+            localStorage.setItem("token", this.token);
+            localStorage.setItem("name", this.name);
+          }
+          // 登录成功后跳转主页
+          this.$router.replace("/");
+        } else {
+          // Message.error("请输入正确的用户名或密码~");
+          Message.error({
+            duration: 700,
+            message: "请输入正确的用户名或密码~",
+          });
         }
-        // 登录成功后跳转主页
-        this.$router.replace("/");
-      } else {
-        // Message.error("请输入正确的用户名或密码~");
-        Message.error({
-          duration: 700,
-          message: "请输入正确的用户名或密码~",
-        });
+      } catch (e) {
+        console.log(e);
       }
     },
   },

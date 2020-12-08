@@ -1,7 +1,8 @@
 /*
   注册页面
 */
-import { reqGetRegister, reqLogin } from '@api/user';
+/* eslint-disable */
+import { reqGetRegister, reqLogin, reqLogout } from '@api/user';
 
 export default {
   state: {
@@ -16,16 +17,27 @@ export default {
       await reqGetRegister(data);
     },
     async login({ commit }, { phone, password }) {
-      console.log(phone, password)
       const user = await reqLogin(phone, password)
       // 登录成功后要获取返回来的值，将name和token保存
       commit('LOGIN', user)
+    },
+    async logout({ commit }) {
+      await reqLogout()
+      // 1-删除token和name（从localStorage中）,并更新vuex中的数据
+      localStorage.removeItem("token");
+      localStorage.removeItem("name");
+      // 手动更新vuex中的数据
+      commit('LOGOUT')
     }
   },
   mutations: {
     LOGIN(state, user) {
       state.name = user.name;
       state.token = user.token;
+    },
+    LOGOUT(state) {
+      state.token = '';
+      state.name = '';
     }
   }
 }

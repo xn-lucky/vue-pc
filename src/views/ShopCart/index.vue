@@ -16,8 +16,8 @@
             <input
               type="checkbox"
               name="chk_list"
-              :checked="cart.isChecked === 1"
-              @click="handleCheck"
+              :checked="+cart.isChecked"
+              @click="handleCheck(cart.skuId, $event)"
             />
           </li>
           <li class="cart-list-con2">
@@ -33,9 +33,15 @@
             <button
               href="javascript:void(0)"
               class="mins"
-              @click="updShopCart(cart.skuId, -1)"
+              @click="updShopCart(cart.skuId, -1, cart.skuNum)"
               :disabled="cart.skuNum === 1"
             >
+              <!-- <button
+              href="javascript:void(0)"
+              class="mins"
+              @click="updShopCart(cart.skuId, -1)"
+              :disabled="cart.skuNum === 1"
+            > -->
               -
             </button>
             <input
@@ -47,11 +53,17 @@
               @blur="updateBlur(cart.skuId, cart.skuNum, $event)"
               @input="updateInput"
             />
-            <button
+            <!-- <button
               href="javascript:void(0)"
               class="plus"
               @click="updShopCart(cart.skuId, 1)"
               :disabled="cart.skuNum === 10"
+            > -->
+            <button
+              href="javascript:void(0)"
+              class="plus"
+              @click="updShopCart(cart.skuId, 1, cart.skuNum)"
+              :disabled="cart.skuNum >= 10"
             >
               +
             </button>
@@ -69,7 +81,12 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="allIsCheck === cartList.length"
+          @click="updChecked(cartList, $event)"
+        />
         <span>全选</span>
       </div>
       <div class="option">
@@ -87,7 +104,7 @@
           <i class="summoney">{{ allPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <button class="sum-btn" target="_blank" @click="trade">结算</button>
         </div>
       </div>
     </div>
@@ -105,20 +122,41 @@ export default {
     }),
     allPrice() {
       return this.cartList
-        .filter((cart) => cart.isChecked === 1)
+        .filter((cart) => +cart.isChecked)
         .reduce((p, c) => p + c.skuPrice * c.skuNum, 0);
     },
     allNum() {
       return this.cartList
-        .filter((cart) => cart.isChecked === 1)
+        .filter((cart) => +cart.isChecked)
         .reduce((p, c) => p + c.skuNum, 0);
+    },
+    allIsCheck() {
+      return this.cartList.filter((cart) => +cart.isChecked).length;
     },
   },
   methods: {
-    ...mapActions(["addShopCart"]),
-    updShopCart(skuId, skuNum) {
+    ...mapActions(["addShopCart", "cartChecked", "allCartChecked"]),
+    changeInput(e) {
+      console.log(e.target.value);
+    },
+    updShopCart(skuId, skuNum, count) {
+      // 大于1说明是增加
+      if (skuNum > 1) {
+        if (count >= 10) {
+          // 说明已经到了最大库存了，不发请求
+          alert("超出库存了");
+          return;
+        }
+      }
+      // 说明是减少
+      if (skuNum < 1) {
+        if (count <= 1) {
+          // 说明已经是最少了，不能在减少了
+          alert("确认shanchu?");
+          return;
+        }
+      }
       // 点击商品的加减按钮
-      // console.log(skuNum);
       this.addShopCart({ skuId, skuNum });
     },
     updateBlur(skuId, skuNum, e) {
@@ -142,8 +180,38 @@ export default {
       // 给表单赋值，显示在页面上
       e.target.value = skuNum;
     },
-    handleCheck() {
-      console.log(123);
+    async handleCheck(skuId, e) {
+      // 获取勾选框是否勾选e.target.checked
+      // console.log(e.target.checked);
+      await this.cartChecked({
+        skuId,
+        isChecked: e.target.checked ? "1" : "0",
+      });
+    },
+    // 点击全选按钮 页面上数据的勾选情况与之一致
+    updChecked(cartList, e) {
+      // 获取当前的点击的checked
+      console.log(e.target.checked);
+      // 发送请求 改变每个数据的
+      this.allCartChecked({
+        cartList,
+        isChecked: e.target.checked ? "1" : "0",
+      });
+    },
+    // 点击结算
+    trade() {
+      // 结算跳转到trade页面(订单交易页面)
+      // 这时候应该要将你在购物车勾选的数据当做参数传过去，但是有接口可以获取，所以不用传
+      // 1- 过滤数据 看是否有勾选的数据
+      // 还需要考虑的点是结算需要登录,还需要判断是否有登陆(判断是否有token),若有很多个组件都需要判断是否有登陆就比较麻烦，代码冗余,所以这边通过路由守卫来做，组件中只需要直接跳转即可
+      const checkedCart = this.cartList.filter((cart) => +cart.isChecked);
+      if (checkedCart.length > 0) {
+        // 说明有勾选数据
+        this.$router.push("/trade");
+      } else {
+        // 一个弹框,提示需要勾选结算的数据
+        this.$message("请勾选需要结算的数据~");
+      }
     },
   },
   mounted() {
@@ -353,7 +421,7 @@ export default {
       .sumbtn {
         float: right;
 
-        a {
+        button {
           display: block;
           position: relative;
           width: 96px;
@@ -365,6 +433,8 @@ export default {
           font-family: "Microsoft YaHei";
           background: #e1251b;
           overflow: hidden;
+          border: none;
+          outline: none;
         }
       }
     }

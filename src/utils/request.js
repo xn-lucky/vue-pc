@@ -4,8 +4,13 @@
 */
 import axios from 'axios';
 import { Message } from 'element-ui'
+import getUserTempId from '@utils/getUserTempId';
 import NProgress from 'nprogress';
-import getUserTempId from '@utils/getUserTempId'
+// store就是vuex的store，也是this.$store
+
+/* eslint-disable import/no-cycle */
+import store from "../store";
+
 import 'nprogress/nprogress.css';
 
 // 内存中定义，即写在外边，不需要每次请求都去函数中调用返回
@@ -26,8 +31,18 @@ instance.interceptors.request.use(
     // console.log(config);
     // 开始设置进度条
     NProgress.start();
+    // 判断是否有token,如果每次都在localStorage中获取,是读取硬盘的，性能较差，之前有在登录成功后保存在vuex中，可以直接在vuex中获取(vuex的数据是保存在内存中的)
+
+    const { headers } = config
+    // let token = ''
+    let { token } = store.state.user;
+    if (token) {
+      // 设置请求头
+      headers.token = token;
+    }
+
     // 设置请求头
-    config.headers.userTempId = userTempId;
+    headers.userTempId = userTempId;
     return config;
   }
   // 第二个参数是返回失败的请求响应，若是只有一个请求拦截器,则不会触发失败的，底层是返回的成功
@@ -47,14 +62,16 @@ instance.interceptors.response.use(
     if (res.data.code === 200) {
       return res.data.data;
     }
+
     // 在拦截器中处理错误,就不需要在页面发送请求后用catch和then获成功和失败了
     // 请求时捕获失败使用try...catch捕获失败
-    const { message, data } = res.data
-    const err = message + data ? data : ''
+    let { message, data } = res.data
+    const err = data ? message + data : message
     Message.error(err)
     return Promise.reject(err);
   },
   (error) => {
+    debugger
     NProgress.done();
     // 处理错误信息
     const message = error.message || '网络错误';

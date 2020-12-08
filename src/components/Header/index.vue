@@ -4,7 +4,11 @@
       <div class="header-container">
         <div class="header-container-left">
           <p>尚品汇欢迎您!</p>
-          <p>
+          <p v-if="userName">
+            {{ userName }} 用户
+            <button @click="cancelLogin">退出</button>
+          </p>
+          <p v-else>
             <span>请</span><router-link to="/login">登录</router-link>
             <router-link to="/register" class="header-container-left-register"
               >免费注册</router-link
@@ -13,7 +17,7 @@
         </div>
         <div class="header-container-right">
           <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="/shopcart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -50,6 +54,11 @@ export default {
     return {
       searchText: "", // 搜索框内容
     };
+  },
+  computed: {
+    userName() {
+      return this.$store.state.user.name;
+    },
   },
   methods: {
     /**
@@ -102,12 +111,21 @@ export default {
 
        */
     },
+    // 退出登录
+    async cancelLogin() {
+      // 发送请求退出
+      await this.$store.dispatch("logout");
+      // 2-跳转到登录页面
+      this.$router.push("/");
+    },
   },
   mounted() {
     // 绑定事件，用于回调对搜索框的数据进行清空
     this.$bus.$on("clearSearchText", () => {
       this.searchText = "";
     });
+    // 获取判断是否存在用户名(即是否登录),也可以从vuex获取(因为vuex的数据是从localStorage中获取的,所以即使刷新页面也一直存在)
+    // this.name = localStorage.getItem("name");
   },
 };
 </script>
@@ -140,6 +158,10 @@ export default {
   padding: 0 5px;
   margin-left: 5px;
   border-left: 1px solid #b3aeae;
+}
+.header-container-left button {
+  color: rgb(79, 76, 212);
+  border: none;
 }
 .header-container-right a {
   padding: 0 5px;

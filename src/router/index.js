@@ -8,6 +8,12 @@ import Search from '@views/Search';
 import Detail from '@views/Detail';
 import AddCartSuccess from '@views/AddCartSuccess';
 import ShopCart from '@views/ShopCart';
+import Trade from '@views/Trade';
+import PaySuccess from '@views/PaySuccess';
+import Pay from '@views/Pay';
+import Center from '@views/Center';
+
+import store from '../store'
 
 // 重写VueRouter原型上的push/replace方法
 const { push, replace } = VueRouter.prototype;// 将push赋予另外值,为以后调用
@@ -35,7 +41,10 @@ VueRouter.prototype.replace = function (localtion, onComplete, onAbort) {
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
+  // 模式
+  // mode: 'hash', // 默认模式
+  // mode: 'history',
   routes: [
     {
       path: '/',
@@ -75,9 +84,47 @@ export default new VueRouter({
       path: '/shopcart',
       component: ShopCart,
     },
+    {
+      name: 'trade',
+      path: '/trade',
+      component: Trade,
+    },
+    {
+      name: 'pay',
+      path: '/pay',
+      component: Pay,
+    },
+    {
+      name: 'center',
+      path: '/center',
+      component: Center,
+    },
+    {
+      name: 'paysuccess',
+      path: '/paysuccess',
+      component: PaySuccess,
+    },
   ],
   // 每次切换路由页面滚动条位置
   scrollBehavior() {
     return { x: 0, y: 0 };
   },
+
 });
+// 做个权限的路径
+const permissionPaths = ['/trade', 'pay', 'center']
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  /*
+    to:要去哪里
+    from: 从哪个链接过来
+    next: 执行下一步（不执行就不会跳转）
+  */
+  // 先判断页面是否满足条件,如果满足在判断是否登录,没有就跳转到登录页面
+  if (permissionPaths.indexOf(to.path) > -1 && !store.state.user.token) {
+    return next('/login')
+  }
+  next()
+})
+
+export default router
