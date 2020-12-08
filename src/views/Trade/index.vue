@@ -82,7 +82,7 @@
             }}</i
             >件商品，总商品金额</b
           >
-          <span>¥{{ allPrice }}</span>
+          <span>¥{{ orderTradeList.totalAmount }}</span>
         </li>
         <li>
           <b>返现：</b>
@@ -96,7 +96,7 @@
     </div>
     <div class="trade">
       <div class="price">
-        应付金额:<span>¥{{ allPrice }}</span>
+        应付金额:<span>¥{{ orderTradeList.totalAmount }}</span>
       </div>
       <div class="receiveInfo">
         寄送至:
@@ -123,15 +123,6 @@ export default {
       addressData: {},
       message: "", // 买家留言数据
     };
-  },
-  computed: {
-    allPrice() {
-      if (!this.orderTradeList.detailArrayList) return;
-      return this.orderTradeList.detailArrayList.reduce(
-        (p, c) => p + c.orderPrice * c.skuNum,
-        0
-      );
-    },
   },
   watch: {
     orderTradeList: {
@@ -162,15 +153,6 @@ export default {
         addressData: { consignee, phoneNum, userAddress },
         message,
       } = this;
-      // console.log(
-      //   tradeNo,
-      //   consignee,
-      //   phoneNum,
-      //   userAddress,
-      //   message,
-      //   detailArrayList
-      // );
-      // console.log(reqSubmitOrder);
       // 1- 提交订单(发送提交订单请求)
       const orderId = await reqSubmitOrder({
         tradeNo,

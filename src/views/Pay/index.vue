@@ -17,7 +17,7 @@
           >
           <span class="fr"
             ><em class="lead">应付金额：</em
-            ><em class="orange money">￥17,654</em></span
+            ><em class="orange money">￥0.01</em></span
           >
         </div>
       </div>
@@ -76,7 +76,7 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <router-link class="btn" to="/paysuccess">立即支付</router-link>
+          <el-button class="btn" @click="paysuccess">立即支付</el-button>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -93,8 +93,45 @@
 </template>
 
 <script>
+import QRCode from "qrcode";
+import { reqCreateNative } from "@api/order";
+
 export default {
   name: "Pay",
+  methods: {
+    // 立即支付
+    async paysuccess() {
+      // 获取返回回来的数据，生成对应的二维码数据
+      const payData = await reqCreateNative(this.$route.query.orderId);
+      // console.log(payData);
+      // 生成二维码
+      QRCode.toDataURL(payData.codeUrl)
+        .then((url) => {
+          // 成功
+          this.$alert(`<img src="${url}"/>`, "请使用微信扫码支付", {
+            confirmButtonText: "我已成功支付",
+            cancelButtonText: "支付中遇到了问题",
+            showClose: false, // 是否显示右上角关闭按钮
+            showCancelButton: true, // 是否显示取消按钮
+            center: true,
+            dangerouslyUseHTMLString: true, // 是否允许解析html片段
+          })
+            .then(() => {
+              // 成功跳转支付成功页面
+              this.$router.push("/paysuccess");
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
+        })
+        .catch(() => {
+          this.$message.error("支付遇到了问题，请重新试试");
+        });
+    },
+  },
 };
 </script>
 
