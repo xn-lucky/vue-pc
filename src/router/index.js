@@ -1,19 +1,29 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
-import Home from '@views/Home';
-import Login from '@views/Login';
-import Register from '@views/Register';
-import Search from '@views/Search';
-import Detail from '@views/Detail';
-import AddCartSuccess from '@views/AddCartSuccess';
-import ShopCart from '@views/ShopCart';
-import Trade from '@views/Trade';
-import PaySuccess from '@views/PaySuccess';
-import Pay from '@views/Pay';
-import Center from '@views/Center';
-
 import store from '../store'
+
+const Home = () => import(/* webpackChunkName: "Home" */'@views/Home')
+const Login = () => import(/* webpackChunkName: "Login" */'@views/Login')
+const Register = () => import(/* webpackChunkName: "Register" */'@views/Register')
+const Search = () => import(/* webpackChunkName: "Search" */'@views/Search')
+const Detail = () => import(/* webpackChunkName: "Detail" */'@views/Detail')
+const AddCartSuccess = () => import(/* webpackChunkName: "AddCartSuccess" */'@views/AddCartSuccess')
+const ShopCart = () => import(/* webpackChunkName: "ShopCart" */'@views/ShopCart')
+const Trade = () => import(/* webpackChunkName: "Trade" */'@views/Trade')
+const PaySuccess = () => import(/* webpackChunkName: "PaySuccess" */'@views/PaySuccess')
+const Pay = () => import(/* webpackChunkName: "Pay" */'@views/Pay')
+const Center = () => import(/* webpackChunkName: "Center" */'@views/Center')
+// import Home from '@views/Home';
+// import Login from '@views/Login';
+// import Register from '@views/Register';
+// import Search from '@views/Search';
+// import Detail from '@views/Detail';
+// import AddCartSuccess from '@views/AddCartSuccess';
+// import ShopCart from '@views/ShopCart';
+// import Trade from '@views/Trade';
+// import PaySuccess from '@views/PaySuccess';
+// import Pay from '@views/Pay';
+// import Center from '@views/Center';
 
 // 重写VueRouter原型上的push/replace方法
 const { push, replace } = VueRouter.prototype;// 将push赋予另外值,为以后调用

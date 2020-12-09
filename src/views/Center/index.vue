@@ -281,7 +281,7 @@
 
 <script>
 export default {
-  name: "",
+  name: "Center",
 };
 </script>
 

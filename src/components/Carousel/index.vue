@@ -8,7 +8,8 @@
         v-for="carousel in carouselList"
         :key="carousel.id"
       >
-        <img :src="carousel.imgUrl" />
+        <!-- <img :src="carousel.imgUrl" /> -->
+        <img v-lazy="carousel.imgUrl" />
       </div>
     </div>
     <!-- 小点点 -->

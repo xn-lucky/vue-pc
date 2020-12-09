@@ -12,6 +12,8 @@ import NProgress from 'nprogress';
 import store from "../store";
 
 import 'nprogress/nprogress.css';
+// 请求的公共地址配置 判断当前的环境是什么环境
+let prefixUrl = process.env.NODE_ENV === 'development' ? '/' : 'http://182.92.128.115/';
 
 // 内存中定义，即写在外边，不需要每次请求都去函数中调用返回
 const userTempId = getUserTempId()
@@ -19,7 +21,7 @@ const userTempId = getUserTempId()
 const instance = axios.create({
   // baseURL: 'http://182.92.128.115/api',
   // 公共的路径,因为运用了代理解决跨域,所以客户端发送请求到代理服务器,代理服务器的地址是与客户端的一致,所以可以省略，
-  baseURL: '/api',
+  baseURL: `${prefixUrl}api`,
   headers: {
     // 这边是配置公共的请求头，但是因为登录没有传token参数，所以这边不会设置
   }
