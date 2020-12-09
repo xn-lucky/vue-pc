@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { reqGetCartList, reqAddShopCart, reqCartChecked } from '@api/shopcart';
+import { reqGetCartList, reqAddShopCart, reqCartChecked, reqDelShop } from '@api/shopcart';
 
 export default {
   state: {
@@ -19,6 +19,12 @@ export default {
       // 2- 或者是直接更新vuex的数据,从更更新页面(vuex是响应式数据,会比1少发一个请求)
       // console.log(commit);
       commit('UPD_SHOPCART', { skuId, skuNum });
+    },
+    async delShop({ commit }, skuId) {
+      // 发送删除购物车数据请求
+      await reqDelShop(skuId)
+      // 也是有两种方法更新数据 要么重新发请求，要么就直接修改vuex数据
+      commit('DEL_SHOP', skuId)
     },
     async cartChecked({ commit }, { skuId, isChecked }) {
       await reqCartChecked(skuId, isChecked);
@@ -57,6 +63,9 @@ export default {
         cart.isChecked = isChecked;
         return cart;
       });
+    },
+    DEL_SHOP(state, skuId) {
+      state.cartList = state.cartList.filter(cart => cart.skuId !== skuId)
     }
   }
 };

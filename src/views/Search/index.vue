@@ -107,9 +107,9 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import GoodsType from "@comps/GoodsType";
+import Pager from "@comps/Pager";
 import SelectType from "./SelectType";
 import GoodsList from "./GoodsList";
-import Pager from "./Pager";
 
 export default {
   name: "Search",

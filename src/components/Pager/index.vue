@@ -97,6 +97,7 @@ export default {
         // 返回false验证失败
         return val >= 5 && val <= 21 && val % 2 === 1;
       },
+      default: 7
     },
   },
   computed: {

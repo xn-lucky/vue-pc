@@ -72,7 +72,7 @@
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click.prevent="deleteShop(cart.skuId)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -135,7 +135,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addShopCart", "cartChecked", "allCartChecked"]),
+    ...mapActions(["addShopCart", "cartChecked", "allCartChecked", "delShop"]),
     changeInput(e) {
       console.log(e.target.value);
     },
@@ -213,6 +213,11 @@ export default {
         this.$message("请勾选需要结算的数据~");
       }
     },
+    // 点击删除
+    deleteShop(skuId) {
+      // 发送删除购物车请求
+      this.delShop(skuId)
+    }
   },
   mounted() {
     // 发送请求，请求购物车数据

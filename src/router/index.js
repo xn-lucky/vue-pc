@@ -13,6 +13,8 @@ const Trade = () => import(/* webpackChunkName: "Trade" */'@views/Trade')
 const PaySuccess = () => import(/* webpackChunkName: "PaySuccess" */'@views/PaySuccess')
 const Pay = () => import(/* webpackChunkName: "Pay" */'@views/Pay')
 const Center = () => import(/* webpackChunkName: "Center" */'@views/Center')
+const MyOrder = () => import(/* webpackChunkName: "MyOrder" */'@views/Center/MyOrder')
+const GroupBuy = () => import(/* webpackChunkName: "GroupBuy" */'@views/Center/GroupBuy')
 // import Home from '@views/Home';
 // import Login from '@views/Login';
 // import Register from '@views/Register';
@@ -108,6 +110,21 @@ const router = new VueRouter({
       name: 'center',
       path: '/center',
       component: Center,
+      children: [
+        {
+          path: 'myorder',
+          component: MyOrder
+        },
+        {
+          path: 'groupbuy',
+          component: GroupBuy
+        },
+        // 自动跳转的路由
+        {
+          path: '',
+          redirect: '/center/myorder'
+        }
+      ]
     },
     {
       name: 'paysuccess',
