@@ -138,8 +138,9 @@ const router = new VueRouter({
   },
 
 });
-// 做个权限的路径
-const permissionPaths = ['/trade', 'pay', 'center']
+// 做个权限的路径'/center/myorder' 我的订单页面
+
+const permissionPaths = ['/trade', 'pay', 'center', '/center/myorder']
 // 路由守卫
 router.beforeEach((to, from, next) => {
   /*
